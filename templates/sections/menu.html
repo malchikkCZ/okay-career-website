@@ -1,0 +1,31 @@
+<section id="menu">
+
+    <div class="menuitem">
+      <img src="{{ url_for('static', filename='images/menuimg1.png') }}">
+      <div class="menuitemtext">
+        <a href="{{ url_for('hq') }}">CENTRÁLA</a>
+      </div>
+    </div>
+
+    <div class="menuitem">
+      <img src="{{ url_for('static', filename='images/menuimg2.png') }}">
+      <div class="menuitemtext">
+        <a href="{{ url_for('stores') }}">PRODEJNY</a>
+      </div>
+    </div>
+
+    <div class="menuitem">
+      <img src="{{ url_for('static', filename='images/menuimg3.png') }}">
+      <div class="menuitemtext">
+        <a href="{{ url_for('warehouses') }}">SKLADY</a>
+      </div>
+    </div>
+
+    <div class="menuitem">
+      <img src="{{ url_for('static', filename='images/menuimg4.png') }}">
+      <div class="menuitemtext">
+        <a href="{{ url_for('home') }}">KONTAKTY</a>
+      </div>
+    </div>
+
+  </section>

@@ -1,0 +1,47 @@
+{% set page_title = 'Sklady' %}
+{% include 'sections/header.html' %}
+
+    <section id="main" class="topmost">
+
+        <div class="content-left">
+          <div class="contL">
+              <h2>Naše sklady jsou OKAY</h2>
+              <p>Bez perfektně fungujícího skladu a logistiky by bylo OKAY poloviční. Při tak velkých objemech e-shopových objednávek a nákupů v prodejnách OKAY je zajištění plynulého a rychlého chodu skladů i pečlivost a spolehlivost každého jedince naprostou nezbytností. Naši skladníci to zvládají na jedničku s hvězdičkou a ještě si k tomu zvládnou udržet skvělou náladu.</p>
+
+            <div class="smctabtn">
+                <a href="#contactForm">Přidejte se k nám!</a>
+            </div>
+          </div>
+          <img class="contentimg" src="{{ url_for('static', filename='images/nase-sklady-jsou-okay.png') }}">
+        </div>
+
+
+        <div class="content-right">
+          <div class="contR">
+            <h2>Stále rosteme</h2>
+            <p>Nábytek se k našim zákazníkům dostává z Velké Bíteše, elektro nově distribuujeme z Tuřan – oba moderní sklady nabízejí přes 28 tisíc m2. V následujících měsících otevíráme také nové prostory ve Vyškově a Prostějově, které jsou realizovány ve stupni zelené certifikace BREEAM Very Good, mají strategickou polohu s výbornou dopravní dostupností a poskytují dalších více než 50 tisíc m2 skladové plochy.</p>
+          </div>
+          <img class="contentimg"  src="{{ url_for('static', filename='images/stale-rosteme.png') }}">
+        </div>
+
+        <div class="content-left">
+          <div class="contL">
+            <h2>Spokojenost zákazníka především</h2>
+            <p>Vzhledem k velkým objemům prodeje v OKAY jsou na pracovníky našich skladů, specialisty logistiky i administrativu kladeny vysoké nároky a proto všichni procházejí nejen důkladným výběrovým řízením, ale také samozřejmě náležitými proškoleními. Naším cílem je perfektně fungující logistika a včasné a bezproblémové dodání zboží našim zákazníkům.</p>
+          </div>
+          <img class="contentimg" src="{{ url_for('static', filename='images/spokojenost-zakaznika-predevsim.png') }}">
+        </div>
+
+    </section>
+<!--
+    <section id="videoFrame">
+      <div class="videoContainer">
+        <iframe class="video" src="https://www.youtube.com/embed/_5bE-YUpXEs" allowfullscreen></iframe>
+
+      </div>
+    </section>
+  -->
+
+  {% include 'sections/contact-form.html' %}
+  {% include 'sections/menu.html' %}
+  {% include 'sections/footer.html' %}
