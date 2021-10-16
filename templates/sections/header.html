@@ -7,26 +7,28 @@
   <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=0.6">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OKAY kariéra - {{ page_title }}</title>
 </head>
 
 <body>
 
   <nav>
-    <div class="leftbar">
-      <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
-      <h1>KARIÉRA</h1>
-    </div>
+      <div class="container">
+        <div class="leftbar">
+        <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
+        <h1>KARIÉRA</h1>
+        </div>
 
-    <div class="rightbar">
-        {% include 'snippets/menuitems.html' %}
-    </div>
+        <div class="rightbar">
+            {% include 'snippets/menuitems.html' %}
+        </div>
 
-    <div class="rightbarresp">
-      <img src="{{ url_for('static', filename='/images/menu-icon.svg') }}">
-      <div class="respmenu">
-        {% include 'snippets/menuitems.html' %}
-      </div>
+        <div class="rightbarresp">
+        <img src="{{ url_for('static', filename='/images/menu-icon.svg') }}">
+        <div class="respmenu">
+            {% include 'snippets/menuitems.html' %}
+        </div>
+        </div>
     </div>
   </nav>

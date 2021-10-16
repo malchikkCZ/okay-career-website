@@ -18,7 +18,7 @@ h2 {
 }
 
 p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 body {
@@ -35,8 +35,21 @@ hr {
   /* width: 5%; */
 }
 
+.container {
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 100px;
+}
+
 section {
   padding: 100px 100px 0 100px;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .topmost {
@@ -46,12 +59,9 @@ section {
 /* Top bar */
 
 nav {
-  align-items: center;
   background-color: #124d96;
   color: white;
-  display: flex;
   height: 80px;
-  justify-content: space-between;
   left: 0;
   position: fixed;
   top: 0;
@@ -62,7 +72,6 @@ nav {
 .leftbar {
   align-items: center;
   display: inline-flex;
-  margin-left: 100px;
 }
 
 .leftbar h1 {
@@ -73,7 +82,7 @@ nav {
 }
 
 .leftbar img {
-  height: 80px;
+  height: 50px;
 }
 
 .respmenu {
@@ -116,7 +125,6 @@ nav {
 
 .rightbar {
   display: inline-block;
-  margin-right: 100px;
 }
 
 .rightbar li {
@@ -285,18 +293,6 @@ nav {
   /* justify-content: space-around; */
 }
 
-.article {
-  /* font-size: 1.2rem; */
-  /* min-height: 350px;
-  width: auto; */
-}
-
-/* .article h2 {
-  color: #124d96;
-  margin-top: 0;
-  padding-top: 0;
-} */
-
 .content-left, .content-right {
   align-items: flex-start;
   display: flex;
@@ -453,8 +449,6 @@ iframe {
   padding: 0 100px;
 }*/
 
-
-
 input {
   font-size: 1rem;
   padding: 10px;
@@ -468,9 +462,10 @@ input:focus {
   box-shadow: 0 0 10px #053742;
 }
 
-.btntext {
+#submit {
   align-items: center;
   color: white;
+  background-color: #124d96;
   display: inline-flex;
   /* font-family: 'VAGRoundedLTPro', 'Open Sans', sans-serif; */
   font-size: 1.4rem;
@@ -478,13 +473,20 @@ input:focus {
   height: 100%;
   justify-content: center;
   transition: all 0.5s ease;
-  width: 100%;
+  height: 60px;
+  width: 300px;
+  transition: all 0.5s ease;
+  border: 1px solid white;
 }
 
-.btntext:hover {
+#submit:hover {
   color: #124d96;
+  background-color: white;
+  border-color: #124d96;
   text-decoration: none;
 }
+
+
 
 textarea {
   font-family: 'Open Sans', sans-serif;
@@ -523,7 +525,7 @@ textarea:focus {
   border: 3px solid #124d96;
   border-radius: 50%;
   height: 150px;
-  weight: 150px;
+  width: 150px;
   z-index: 20;
 }
 
@@ -591,16 +593,14 @@ textarea:focus {
 /* Footer bar */
 
 footer {
-  align-items: center;
   background-color: #124d96;
   color: white;
-  display: flex;
-  height: 100px;
+  height: 75px;
   margin-top: 100px;
-  justify-content: space-between;
   left: 0;
   top: 0;
   width: 100%;
+  padding-top: 25px;
 }
 
 #upbutton {
@@ -646,10 +646,16 @@ footer {
 /* Responsive */
 @media (max-width: 992px) {
 
-
+    p {
+        font-size: 1.2rem;
+    }
   section {
     padding: 50px 10px 0 10px;
   }
+
+  .container {
+    padding: 0 10px;
+}
 
   footer {
     margin-top: 50px;
