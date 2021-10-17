@@ -3,13 +3,21 @@
 
     <h2>Napište nám</h2>
 
-    <form action="{{ url_for(context) }}" method="POST">
+    <form action="{{ url_for(context) }}" method="POST" enctype="multipart/form-data">
 
         <div class="formContainer">
             {{ form.csrf_token }}
             {{ form.name }}
             {{ form.surname }}
             {{ form.email }}
+            
+            <div id="form-file">
+                
+                <div class="file-button">
+                    <span id="file-label">Nahrát životopis</span> {{ form.file }}
+                </div>
+                 
+            </div>
             {{ form.message }}
             {{ form.submit }}
         </div>
@@ -17,3 +25,5 @@
     </form>
 
 </section>
+
+<script src="{{ url_for('static', filename='js/fileform.js') }}"></script>
