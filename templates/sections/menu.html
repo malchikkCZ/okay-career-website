@@ -1,31 +1,39 @@
 <section id="menu">
 
     <div class="menuitem">
+        <a href="{{ url_for('hq') }}">
       <img src="{{ url_for('static', filename='images/menuimg1.png') }}">
       <div class="menuitemtext">
-        <a href="{{ url_for('hq') }}">CENTRÁLA</a>
+        <p>CENTRÁLA</p>
       </div>
+    </a>
     </div>
 
     <div class="menuitem">
+        <a href="{{ url_for('stores') }}">
       <img src="{{ url_for('static', filename='images/menuimg2.png') }}">
       <div class="menuitemtext">
-        <a href="{{ url_for('stores') }}">PRODEJNY</a>
+        <p>PRODEJNY</p>
       </div>
+    </a>
     </div>
 
     <div class="menuitem">
+        <a href="{{ url_for('warehouses') }}">
       <img src="{{ url_for('static', filename='images/menuimg3.png') }}">
       <div class="menuitemtext">
-        <a href="{{ url_for('warehouses') }}">SKLADY</a>
+        <p>SKLADY</p>
       </div>
+    </a>
     </div>
 
     <div class="menuitem">
+        <a href="{{ url_for('home') }}">
       <img src="{{ url_for('static', filename='images/menuimg4.png') }}">
       <div class="menuitemtext">
-        <a href="{{ url_for('home') }}">KONTAKTY</a>
+        <p>KONTAKTY</p>
       </div>
+    </a>
     </div>
 
-  </section>
+</section>
