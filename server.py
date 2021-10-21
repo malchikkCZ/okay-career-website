@@ -31,17 +31,20 @@ class ContactForm(FlaskForm):
         surname = self.surname.data
         email = self.email.data
         filename = secure_filename(self.file.data.filename)
-        self.file.data.save('./temp/' + filename)
+        path = "./files/"
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.file.data.save(f"{path}{filename}")
         message = self.message.data
 
         msg = MIMEMultipart()
         msg["From"] = email
         msg["To"] = "malchikk@live.com"
         msg["Subject"] = f"{surname} {name} má zájem o práci"
-        msg.attach(MIMEText(f"{surname} {name} napsal:\n\n{message}", "plain"))
+        msg.attach(MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
 
         payload = MIMEBase("application", "octate-stream")
-        with open(f"./temp/{filename}", "rb") as file:
+        with open(f"{path}{filename}", "rb") as file:
             payload.set_payload(file.read())
             encoders.encode_base64(payload)
             payload.add_header('Content-Disposition', 'attachement', filename=filename)
@@ -56,7 +59,7 @@ class ContactForm(FlaskForm):
                 to_addrs="malchikk@live.com",
                 msg=text
             )
-        os.remove("./temp/" + filename)
+        os.remove(f"{path}{filename}")
 
 
 @app.route('/')
