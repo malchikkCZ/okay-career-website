@@ -35,6 +35,22 @@ hr {
     margin-bottom: 100px;
 }
 
+.admin {
+    display: flex;
+    justify-content: center;
+    font-size: .6em;
+}
+
+.admin a {
+    border-left: 1px solid #124d96;
+    padding-left: 10px;
+}
+
+.admin a:first-child {
+    border: none;
+    padding-left: 0;
+}
+
 .container {
     max-width: 1500px;
     margin-left: auto;
