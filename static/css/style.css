@@ -23,8 +23,8 @@ p {
 }
 
 body {
-    font-family: 'Verdana', 'Open Sans', sans-serif;
-    font-weight: lighter;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-weight: 400;
     margin: 0;
     min-width: 500px;
 }
