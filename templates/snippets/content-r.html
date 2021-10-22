@@ -1,0 +1,9 @@
+<div class="content-right">
+    <div class="contR">
+        <h2>
+            {{ section.title_cs }}
+        </h2>
+        {{ section.body_cs | safe }}
+    </div>
+    <img class="contentimg" src="{{ url_for('static', filename=section.image_url) }}">
+</div>

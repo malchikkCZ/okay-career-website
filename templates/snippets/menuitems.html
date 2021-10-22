@@ -1,5 +1,9 @@
 <ul>
-    <li><a href="{{ url_for('home') }}">O NÁS</a></li>
-    <li><a href="https://www.jobs.cz/prace/?company%5B%5D=79138" target="_blank">VOLNÁ MÍSTA</a></li>
-    <li><a href="{{ url_for('home') }}">KONTAKTY</a></li>
+    <li><a href="{{ url_for('index') }}">O nás</a></li>
+    <li><a href="https://www.jobs.cz/prace/?company%5B%5D=79138" target="_blank">Volná místa</a></li>
+    <li><a href="{{ url_for('index') }}">Kontakty</a></li>
+    {% if current_user.is_authenticated %}
+    <li><a class="has-divider" href="#">Administrace</a></li>
+    <li><a href="{{ url_for('logout') }}">Odhlásit</a></li>
+    {% endif %}
 </ul>

@@ -4,11 +4,12 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
-from wtforms import StringField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, TextAreaField, PasswordField, SubmitField
+from wtforms.validators import URL, DataRequired
 
 
 # Contact form
@@ -56,7 +57,39 @@ class ContactForm(FlaskForm):
         os.remove(f"{path}{filename}")
 
 
-# Add or edit persona form
+# Login administrator
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    password = PasswordField("Heslo", validators=[DataRequired()])
+    submit = SubmitField("Přihlásit")
+
+
+# Add administrator
+class UserForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired()])
+    password = PasswordField("Heslo", validators=[DataRequired()])
+    name = StringField("Uživatelské jméno", validators=[DataRequired()])
+    submit = SubmitField("Uložit")
+
+
+# Add page section form
+class SectionForm(FlaskForm):
+    title_cs = StringField("Český titulek", validators=[DataRequired()])
+    title_sk = StringField("Slovenský titulek", validators=[DataRequired()])
+    body_cs = CKEditorField("Český text", validators=[DataRequired()])
+    body_sk = CKEditorField("Slovenský text", validators=[DataRequired()])
+    submit = SubmitField("Uložit")
+
+class UploadSectionImg(FlaskForm):
+    image = FileField("Obrázek", validators=[FileRequired()])
+    submit = SubmitField("Uložit")
+
+class VideoForm(FlaskForm):
+    video_url = StringField("Adresa odkazu na YouTube", validators=[DataRequired(), URL()])
+    submit = SubmitField("Uložit")
+
+
+# Add persona form
 class PersonaForm(FlaskForm):
     fullname = StringField("Jméno a příjmení", validators=[DataRequired()], render_kw={"placeholder": "Jméno a příjmení"})
     position = StringField("Pozice", validators=[DataRequired()], render_kw={"placeholder": "Pozice"})

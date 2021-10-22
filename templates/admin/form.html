@@ -4,8 +4,11 @@
 {% block content %}
 <section id="main" class="container">
     
-    <h3>Nahrej fotku</h3>
+    <h3>{{ title }}</h3>
 
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='body_cs') }}
+    {{ ckeditor.config(name='body_sk') }}
     {{ wtf.quick_form(form, novalidate=True)}}
     
 </section>

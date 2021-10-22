@@ -1,0 +1,18 @@
+<div class="content-left">
+    <div class="contL">
+        <h2>
+            {{ section.title_cs }}
+        </h2>
+        {{ section.body_cs | safe }}
+
+        {% if section.context != "index" %}
+            {% if loop.index == 1 %}
+                <div class="smctabtn">
+                    <a href="#contactForm">Přidejte se k nám!</a>
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+    <img class="contentimg"  src="{{ url_for('static', filename=section.image_url) }}">
+</div>

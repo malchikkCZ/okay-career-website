@@ -1,0 +1,38 @@
+{% if context == "centrala" %}
+    {% set page_title = "Centrála" %}
+{% elif context == "prodejny" %}
+    {% set page_title = "Prodejny" %}
+{% elif context == "sklady" %}
+    {% set page_title = "Sklady" %}
+{% else %}
+    {% set page_title = "O nás" %}
+{% endif %}
+
+{% include 'sections/header.html' %}
+{% include 'sections/alert.html' %}
+
+<section id="main" class="topmost">
+
+    {% include "sections/sections.html" %}
+
+</section>
+
+{% if video %}
+    {% include "sections/video.html" %}
+{% endif %}
+{% if current_user.is_authenticated %}
+    <div class="has-top-padding">
+        <div class="admin">
+            {% if video %}
+                <a href="{{ url_for('add_video', context=context) }}">Změnit video</a>
+                <a href="{{ url_for('delete_video', video_id=video.id) }}">Smazat video</a>
+            {% else %}
+                <a href="{{ url_for('add_video', context=context) }}">Nahrát video</a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% include 'sections/contact-form.html' %}
+{% include 'sections/menu.html' %}
+{% include 'sections/footer.html' %}

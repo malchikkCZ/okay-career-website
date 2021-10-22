@@ -1,4 +1,5 @@
 {% set page_title = 'O nás' %}
+{% set context = "index" %}
 {% include 'sections/header.html' %}
 
   <header>
@@ -20,28 +21,7 @@
 
   <section id="main">
 
-    <!-- <div class="article"> -->
-
-      <div class="content-left">
-        <div class="contL">
-          <h2>Jsme OKAY</h2>
-          <p>OKAY znáte jako ryze českou společnost, která je dnes nejvýznamnějším prodejcem elektra a nábytku. Provozujeme rozsáhlou síť kamenných prodejen v České republice i na Slovensku a vlastní e-shopy. Více než 1500 našich zaměstnanců, franšízantů a vyškolených specialistů pracuje na tom, aby každý rok učinili spokojenými více než 12 milionů zákazníků. To už je úctyhodné číslo.</p>
-          <p>Nabídkou a prodejem elektrospotřebičů a nábytku se snažíme naplnit naše poslání – učinit život všech našich zákazníků krásnějším a jednodušším. Chceme být nejúspěšnějším prodejcem na trhu, udržovat si renomé specialisty v oboru a nabízet široké služby a garance. Řídíme se starým dobrým mottem: „Náš zákazník, náš pán!“</p>
-        </div>
-        <img class="contentimg"  src="{{ url_for('static', filename='images/jsme-okay.png') }}">
-      </div>
-
-      <div class="content-right">
-        <div class="contR">
-          <h2>Proč k nám?</h2>
-          <p>Nová práce je vždy důležitou šancí a velkou výzvou. U nás v OKAY to platí dvojnásob – péče, kterou poskytujeme milionům zákazníků v České republice i na Slovensku, musí být vždy precizní a bez výjimky osobní. Stejně jako naši lidé.</p>
-          <p>Ať už se ucházíte o práci na centrále nebo některé z prodejen, poznáte se s talentovanými lidmi, kteří tvoří základy úspěchu naší společnosti. Každý z nich nachází v OKAY dostatek příležitostí k osobnímu rozvoji a profesnímu růstu. Roky budovaná hodnota značky OKAY s sebou nese velkou zodpovědnost, ale i motivaci k těm nejlepším výkonům.</p>
-          <p><em>Jindřich Životský, majitel společnosti</em></p>
-        </div>
-        <img class="contentimg" src="{{ url_for('static', filename='images/proc-k-nam.jpg') }}">
-      </div>
-
-    <!-- </div> -->
+    {% include "sections/sections.html" %}
 
   </section>
 
