@@ -49,7 +49,7 @@ class ContactForm(FlaskForm):
 
         with smtplib.SMTP("smtp.gmail.com") as mailserver:
             mailserver.starttls()
-            mailserver.login(user="testokay2021@gmail.com", password="ifAAyV2PiejBk9i")
+            mailserver.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASS"))
             mailserver.sendmail(
                 from_addr=email,
                 to_addrs="malchikk@live.com",

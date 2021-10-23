@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -370,5 +370,6 @@ def delete_persona(pers_id):
     return redirect(url_for("index"))
 
 
+# TODO: Remove debug settings below
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port="5000", debug=True)
