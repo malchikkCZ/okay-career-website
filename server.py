@@ -193,6 +193,14 @@ def register():
     return render_template("admin/form.html", form=form, title=form_title)
 
 
+# TODO: Admin route to change password
+# TODO: Admin route to see stored messages
+# TODO: Admin route to set basic settings
+# TODO: Admin route to add custom pages
+# TODO: Admin route to customize top bar menu
+# TODO: Admin route to customize social networks in footer
+
+
 # Admin section routes
 @app.route('/admin/add-section/<context>', methods=["GET", "POST"])
 @admin_only
