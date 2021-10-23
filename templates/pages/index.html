@@ -1,4 +1,4 @@
-{% set page_title = 'O nás' %}
+{% set page_title = loc.pages.index[lang] %}
 {% set context = "index" %}
 {% include 'sections/header.html' %}
 
@@ -11,7 +11,7 @@
       </video>
 
       <div class="ctabutton">
-          <a href="#menu">Dělej, co tě baví!</a>
+          <a href="#menu">{{ loc.buttons.main_cta[lang] }}</a>
       </div>
     </div>
   </header>

@@ -14,11 +14,11 @@ from wtforms.validators import URL, DataRequired
 
 # Contact form
 class ContactForm(FlaskForm):
-    name = StringField("Jméno", validators=[DataRequired()], render_kw={"placeholder": "Jméno"})
-    surname = StringField("Příjmení", validators=[DataRequired()], render_kw={"placeholder": "Příjmení"})
-    email = StringField("Email", validators=[DataRequired()], render_kw={"placeholder": "E-mail"})
+    name = StringField("Jméno", validators=[DataRequired()])
+    surname = StringField("Příjmení", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
-    message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"placeholder": "Váš vzkaz", "rows": 8})
+    message = TextAreaField("Váš vzkaz", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
     def send_email(self):
@@ -80,9 +80,11 @@ class SectionForm(FlaskForm):
     body_sk = CKEditorField("Slovenský text", validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
+
 class UploadSectionImg(FlaskForm):
     image = FileField("Obrázek", validators=[FileRequired()])
     submit = SubmitField("Uložit")
+
 
 class VideoForm(FlaskForm):
     video_url = StringField("Adresa odkazu na YouTube", validators=[DataRequired(), URL()])
@@ -91,12 +93,14 @@ class VideoForm(FlaskForm):
 
 # Add persona form
 class PersonaForm(FlaskForm):
-    fullname = StringField("Jméno a příjmení", validators=[DataRequired()], render_kw={"placeholder": "Jméno a příjmení"})
-    position = StringField("Pozice", validators=[DataRequired()], render_kw={"placeholder": "Pozice"})
-    phone = StringField("Tel. číslo", validators=[DataRequired()], render_kw={"placeholder": "Tel. číslo"})
-    email = StringField("Email", validators=[DataRequired()], render_kw={"placeholder": "E-mail"})
-    area = StringField("Oblast působnosti", validators=[DataRequired()], render_kw={"placeholder": "Oblast působnosti"})
+    fullname = StringField("Jméno a příjmení", validators=[DataRequired()])
+    position_cs = StringField("Název pozice (česky)", validators=[DataRequired()])
+    position_sk = StringField("Název pozice (slovensky)", validators=[DataRequired()])
+    phone = StringField("Tel. číslo", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired()])
+    area = StringField("Oblast působnosti", validators=[DataRequired()])
     submit = SubmitField("Uložit")
+
 
 class UploadPersonaImg(FlaskForm):
     image = FileField("Fotografie", validators=[FileRequired()])

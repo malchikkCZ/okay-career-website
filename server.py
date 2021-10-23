@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, abort
+from flask import Flask, render_template, redirect, url_for, flash, abort, request, json
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -44,6 +44,15 @@ def superadmin_only(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def set_language():
+    lang = str(request.accept_languages)
+    with open("./static/lang.json") as json_data:
+        data = json.load(json_data)
+    if "sk" in lang.lower():
+        return "sk", data
+    else:
+        return "cs", data
+
 
 # Configure tables
 class User(UserMixin, db.Model):
@@ -69,7 +78,8 @@ class Persona(db.Model):
     __tablename__ = "personalists"
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
-    position = db.Column(db.String(100), nullable=False)
+    position_cs = db.Column(db.String(100), nullable=False)
+    position_sk = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(250), nullable=True)
@@ -87,45 +97,49 @@ db.create_all()
 # Frontend routes
 @app.route('/')
 def index():
+    lang, locale = set_language()
     sections = Section.query.filter_by(context="index")
     persona_list = Persona.query.all()
-    return render_template("./pages/index.html", sections=sections, persona_list=persona_list)
+    return render_template("./pages/index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
 
 
 @app.route('/centrala', methods=["GET", "POST"])
 def centrala():
     is_sent = False
+    lang, locale = set_language()
     form = ContactForm()
     sections = Section.query.filter_by(context="centrala")
     video = Video.query.filter_by(video_context="centrala").first()
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", sections=sections, video=video, form=form, success=is_sent, context="centrala")
+    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="centrala")
 
 
 @app.route('/prodejny', methods=["GET", "POST"])
 def prodejny():
     is_sent = False
+    lang, locale = set_language()
     form = ContactForm()
     sections = Section.query.filter_by(context="prodejny")
     video = Video.query.filter_by(video_context="prodejny").first()
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", sections=sections, video=video, form=form, success=is_sent, context="prodejny")
+    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="prodejny")
 
 
 @app.route('/sklady', methods=["GET", "POST"])
 def sklady():
     is_sent = False
+    lang, locale = set_language()
     form = ContactForm()
     sections = Section.query.filter_by(context="sklady")
     video = Video.query.filter_by(video_context="sklady").first()
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", sections=sections, video=video, form=form, success=is_sent, context="sklady")
+    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="sklady")
 
 
 # Admin routes
@@ -140,15 +154,14 @@ def login():
         if not user:
             flash("Tento administrátor neexistuje, zkuste to prosím znovu!")
             return redirect(url_for("login"))
-
         elif not check_password_hash(user.password, password):
             flash("Zadali jste špatné heslo, zkuste to prosím znovu!")
-            return redirect(url_for("login"))
-        
+            return redirect(url_for("login")) 
         else:
             login_user(user)
             return redirect(url_for("index"))
     return render_template("./admin/form.html", form=form, title=form_title)
+
 
 @app.route('/logout')
 def logout():
@@ -252,7 +265,6 @@ def add_video(context):
         form = VideoForm()
     form_title = f"Nahrej odkaz na video na stránku {context}"
     if form.validate_on_submit():
-
         if video:
             video.video_url = form.video_url.data
             db.session.commit()
@@ -289,7 +301,8 @@ def add_persona():
             return redirect(url_for("add_persona"))
         new_persona = Persona(
             fullname=form.fullname.data,
-            position=form.position.data,
+            position_cs=form.position_cs.data,
+            position_sk=form.position_sk.data,
             phone=form.phone.data,
             email=form.email.data,
             area=form.area.data
@@ -306,7 +319,7 @@ def add_persona():
 def upload_persona_img(pers_id):
     form = UploadPersonaImg()
     persona = Persona.query.get(pers_id)
-    form_title = f"Nahrej fotografii pro {persona.name}"
+    form_title = f"Nahrej fotografii pro {persona.fullname}"
     if form.validate_on_submit():
         img_name = secure_filename(form.image.data.filename)
         img_file = f"images/{img_name}"
@@ -322,10 +335,11 @@ def upload_persona_img(pers_id):
 def edit_persona(pers_id):
     persona = Persona.query.get(pers_id)
     form = PersonaForm(obj=persona)
-    form_title = f"Uprav detaily pro {persona.name}"
+    form_title = f"Uprav detaily pro {persona.fullname}"
     if form.validate_on_submit():
         persona.fullname = form.fullname.data
-        persona.position = form.position.data
+        persona.position_cs = form.position_cs.data
+        persona.position_sk = form.position_sk.data
         persona.phone = form.phone.data
         persona.email = form.email.data
         persona.area = form.area.data

@@ -1,25 +1,25 @@
 {% import "bootstrap/wtf.html" as wtf %}
 <section id="contactForm">
 
-    <h2>Napište nám</h2>
+    <h2>{{ loc.headlines.contact_form[lang] }}</h2>
 
     <form action="{{ url_for(context) }}" method="POST" enctype="multipart/form-data">
 
         <div class="formContainer">
             {{ form.csrf_token }}
-            {{ form.name }}
-            {{ form.surname }}
-            {{ form.email }}
+            {{ form.name(placeholder=loc.form_fields.name[lang]) }}
+            {{ form.surname(placeholder=loc.form_fields.surname[lang]) }}
+            {{ form.email(placeholder=loc.form_fields.email[lang]) }}
             
             <div id="form-file">
                 
                 <div class="file-button">
-                    <span id="file-label">Nahrát životopis</span> {{ form.file }}
+                    <span id="file-label">{{ loc.form_fields.upload_cv[lang] }}</span> {{ form.file }}
                 </div>
                  
             </div>
-            {{ form.message }}
-            {{ form.submit }}
+            {{ form.message(placeholder=loc.form_fields.message[lang]) }}
+            {{ form.submit(value=loc.buttons.send_form[lang]) }}
         </div>
 
     </form>

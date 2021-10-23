@@ -1,14 +1,14 @@
 <div class="content-left">
     <div class="contL">
         <h2>
-            {{ section.title_cs }}
+            {{ section["title_" + lang] }}
         </h2>
-        {{ section.body_cs | safe }}
+        {{ section["body_" + lang] | safe }}
 
         {% if section.context != "index" %}
             {% if loop.index == 1 %}
                 <div class="smctabtn">
-                    <a href="#contactForm">Přidejte se k nám!</a>
+                    <a href="#contactForm">{{ loc.buttons.secondary_cta[lang] }}</a>
                 </div>
             {% endif %}
         {% endif %}

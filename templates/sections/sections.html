@@ -1,25 +1,25 @@
 {% for section in sections %}
+    <div>
+        {% if loop.index % 2 == 0 %}
+            {% include "snippets/content-r.html" %}
+        {% else %}
+            {% include "snippets/content-l.html" %}
+        {% endif %}
 
-    {% if loop.index % 2 == 0 %}
-        {% include "snippets/content-r.html" %}
-    {% else %}
-        {% include "snippets/content-l.html" %}
-    {% endif %}
-
-    {% if current_user.is_authenticated %}
-    <div class="admin">
-        <a href="{{ url_for('upload_section_img', section_id=section.id) }}">Změnit obrázek</a>
-        <a href="{{ url_for('edit_section', section_id=section.id) }}">Upravit odstavec</a>
-        <a href="{{ url_for('delete_section', section_id=section.id) }}">Smazat odstavec</a>
+        {% if current_user.is_authenticated %}
+        <div class="has-top-padding">
+            <div class="admin">
+                <a href="{{ url_for('upload_section_img', section_id=section.id) }}">Změnit obrázek</a>
+                <a href="{{ url_for('edit_section', section_id=section.id) }}">Upravit odstavec</a>
+                <a href="{{ url_for('delete_section', section_id=section.id) }}">Smazat odstavec</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-
 {% endfor %}
 
 {% if current_user.is_authenticated %}
-<div class="has-top-padding">
     <div class="admin">
         <a href="{{ url_for('add_section', context=context) }}">Přidat odstavec</a>
     </div>
-</div>
 {% endif %}

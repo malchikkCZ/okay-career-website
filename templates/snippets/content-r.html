@@ -1,9 +1,9 @@
 <div class="content-right">
     <div class="contR">
         <h2>
-            {{ section.title_cs }}
+            {{ section["title_" + lang] }}
         </h2>
-        {{ section.body_cs | safe }}
+        {{ section["body_" + lang] | safe }}
     </div>
     <img class="contentimg" src="{{ url_for('static', filename=section.image_url) }}">
 </div>

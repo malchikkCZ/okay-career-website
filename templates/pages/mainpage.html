@@ -1,11 +1,11 @@
 {% if context == "centrala" %}
-    {% set page_title = "Centrála" %}
+    {% set page_title = loc.pages.centrala[lang] %}
 {% elif context == "prodejny" %}
-    {% set page_title = "Prodejny" %}
+    {% set page_title = loc.pages.prodejny[lang] %}
 {% elif context == "sklady" %}
-    {% set page_title = "Sklady" %}
+    {% set page_title = loc.pages.sklady[lang] %}
 {% else %}
-    {% set page_title = "O nás" %}
+    {% set page_title = loc.pages.index[lang] %}
 {% endif %}
 
 {% include 'sections/header.html' %}
