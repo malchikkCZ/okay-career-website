@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -18,7 +19,7 @@
   <nav>
       <div class="container">
         <div class="leftbar">
-        <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
         <h1>KARIÉRA</h1>
         </div>
 

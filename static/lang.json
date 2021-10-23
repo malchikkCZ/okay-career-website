@@ -1,0 +1,94 @@
+{
+    "pages": {
+        "index": {
+            "cs": "O nás",
+            "sk": "O nás"
+        },
+        "centrala": {
+            "cs": "Centrála",
+            "sk": "Centrála"
+        },
+        "prodejny": {
+            "cs": "Prodejny",
+            "sk": "Predajne"
+        },
+        "sklady": {
+            "cs": "Sklady",
+            "sk": "Sklady"
+        }
+    },
+    "buttons": {
+        "main_cta": {
+            "cs": "Dělej, co tě baví",
+            "sk": "Rob, čo ťa baví"
+        },
+        "secondary_cta": {
+            "cs": "Přidejte se k nám!",
+            "sk": "Pridajte sa k nám!"
+        },
+        "send_form": {
+            "cs": "Odeslat",
+            "sk": "Odoslať"
+        }
+    },
+    "headlines": {
+        "contact_form": {
+            "cs": "Napište nám",
+            "sk": "Napíšte nám"
+        }
+    },
+    "form_fields": {
+        "name": {
+            "cs": "Jméno",
+            "sk": "Meno"
+        },
+        "surname": {
+            "cs": "Příjmení",
+            "sk": "Priezvisko"
+        },
+        "email": {
+            "cs": "E-mail",
+            "sk": "E-mail"
+        },
+        "upload_cv": {
+            "cs": "Nahrát životopis",
+            "sk": "Nahrať životopis"
+        },
+        "message": {
+            "cs": "Váš vzkaz",
+            "sk": "Váš odkaz"
+        }
+    },
+    "menu_items": {
+        "centrala": {
+            "cs": "Centrála",
+            "sk": "Centrála"
+        },
+        "prodejny": {
+            "cs": "Prodejny",
+            "sk": "Predajne"
+        },
+        "sklady": {
+            "cs": "Sklady",
+            "sk": "Sklady"
+        },
+        "kontakty": {
+            "cs": "Kontakty",
+            "sk": "Kontakty"
+        }
+    },
+    "top_menu": {
+        "about": {
+            "cs": "O nás",
+            "sk": "O nás"
+        },
+        "job_offer": {
+            "cs": "Volná místa",
+            "sk": "Voľné miesta"
+        },
+        "contacts": {
+            "cs": "Kontakty",
+            "sk": "Kontakty"
+        }
+    }
+}

@@ -35,6 +35,31 @@ hr {
     margin-bottom: 100px;
 }
 
+.admin {
+    display: flex;
+    justify-content: center;
+    font-size: .7em;
+}
+
+.admin a {
+    border-left: 1px solid #124d96;
+    padding: 0 10px;
+    color: #124d96;
+    font-weight: bold;
+}
+
+.admin a:first-child {
+    border-left: none;
+}
+
+.has-top-padding {
+    padding-top: 20px;
+}
+
+.has-bottom-padding {
+    padding-bottom: 20px;
+}
+
 .container {
     max-width: 1500px;
     margin-left: auto;
@@ -159,6 +184,16 @@ nav {
 .rightbar a {
     color: white;
     padding: 0 10px;
+}
+
+nav .rightbar a {
+    text-transform: uppercase;
+}
+
+.rightbar a.has-divider {
+    border-left: 1px solid #fff;
+    padding-left: 20px;
+    margin-left: 10px;
 }
 
 .rightbarresp {
@@ -299,6 +334,7 @@ nav {
     display: inline-flex;
     opacity: 1;
     height: 100%;
+    text-transform: uppercase;
     justify-content: center;
     transition: color 0.5s;
     width: 100%;
@@ -605,6 +641,7 @@ textarea:focus {
 .personaname h3 {
     color: #124d96;
     font-size: 1.3rem;
+    text-transform: uppercase;
     font-weight: bold;
     margin: 0;
 }
