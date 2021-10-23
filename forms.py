@@ -18,7 +18,7 @@ class ContactForm(FlaskForm):
     surname = StringField("Příjmení", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
-    message = TextAreaField("Váš vzkaz", validators=[DataRequired()])
+    message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
     submit = SubmitField("Odeslat")
 
     def send_email(self):
