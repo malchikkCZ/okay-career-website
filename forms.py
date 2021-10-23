@@ -26,7 +26,8 @@ class ContactForm(FlaskForm):
         surname = self.surname.data
         email = self.email.data
         filename = secure_filename(self.file.data.filename)
-        path = "./files/"
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(basedir, "files")
         if not os.path.exists(path):
             os.makedirs(path)
         self.file.data.save(f"{path}{filename}")

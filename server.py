@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, redirect, url_for, flash, abort, request, json
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
@@ -17,6 +18,7 @@ Bootstrap(app)
 
 # Initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///career.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///career'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -46,7 +48,8 @@ def superadmin_only(f):
 
 def set_language():
     lang = str(request.accept_languages)
-    with open("./static/lang.json") as json_data:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(basedir, "static/lang.json"), encoding="utf-8") as json_data:
         data = json.load(json_data)
     if "sk" in lang.lower():
         return "sk", data
@@ -100,7 +103,7 @@ def index():
     lang, locale = set_language()
     sections = Section.query.filter_by(context="index")
     persona_list = Persona.query.all()
-    return render_template("./pages/index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
+    return render_template("pages/index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
 
 
 @app.route('/centrala', methods=["GET", "POST"])
@@ -113,7 +116,7 @@ def centrala():
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="centrala")
+    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="centrala")
 
 
 @app.route('/prodejny', methods=["GET", "POST"])
@@ -126,7 +129,7 @@ def prodejny():
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="prodejny")
+    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="prodejny")
 
 
 @app.route('/sklady', methods=["GET", "POST"])
@@ -139,7 +142,7 @@ def sklady():
     if form.validate_on_submit():
         form.send_email()
         is_sent = True
-    return render_template("./pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="sklady")
+    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="sklady")
 
 
 # Admin routes
@@ -160,7 +163,7 @@ def login():
         else:
             login_user(user)
             return redirect(url_for("index"))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/logout')
@@ -187,7 +190,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 # Admin section routes
@@ -208,7 +211,7 @@ def add_section(context):
         db.session.flush()
         db.session.commit()
         return redirect(url_for("upload_section_img", section_id=new_section.id))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/upload-section-image/<int:section_id>', methods=["GET", "POST"])
@@ -221,11 +224,12 @@ def upload_section_img(section_id):
     if form.validate_on_submit():
         img_name = secure_filename(form.image.data.filename)
         img_file = f"images/{img_name}"
-        form.image.data.save(f"./static/{img_file}")
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        form.image.data.save(os.path.join(basedir, f"static/{img_file}"))
         section.image_url = img_file.replace("./static/", "")
         db.session.commit()
         return redirect(url_for(context))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/edit_section/<int:section_id>', methods=["GET", "POST"])
@@ -242,7 +246,7 @@ def edit_section(section_id):
         section.body_sk = form.body_sk.data
         db.session.commit()
         return redirect(url_for(context))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/delete-section/<int:section_id>', methods=["GET", "POST"])
@@ -276,7 +280,7 @@ def add_video(context):
             db.session.add(new_video)
             db.session.commit()
         return redirect(url_for(context))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/delete-video/<int:video_id>', methods=["GET", "POST"])
@@ -311,7 +315,7 @@ def add_persona():
         db.session.flush()
         db.session.commit()
         return redirect(url_for("upload_persona_img", pers_id=new_persona.id))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/upload-persona-image/<int:pers_id>', methods=["GET", "POST"])
@@ -323,11 +327,12 @@ def upload_persona_img(pers_id):
     if form.validate_on_submit():
         img_name = secure_filename(form.image.data.filename)
         img_file = f"images/{img_name}"
-        form.image.data.save(f"./static/{img_file}")
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        form.image.data.save(os.path.join(basedir, f"static/{img_file}"))
         persona.image_url = img_file.replace("./static/", "")
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
         
 
 @app.route('/admin/edit-persona/<int:pers_id>', methods=["GET", "POST"])
@@ -345,7 +350,7 @@ def edit_persona(pers_id):
         persona.area = form.area.data
         db.session.commit()
         return redirect(url_for("index"))
-    return render_template("./admin/form.html", form=form, title=form_title)
+    return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/admin/delete-persona/<int:pers_id>', methods=["GET", "POST"])
