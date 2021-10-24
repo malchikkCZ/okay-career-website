@@ -56,6 +56,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
+    active = db.Column(db.Boolean(100), nullable=False)
 
 
 class Section(db.Model):
@@ -146,8 +147,8 @@ def login():
         email = form.email.data
         password = form.password.data
         user = User.query.filter_by(email=email).first()
-        if not user:
-            flash("Tento administrátor neexistuje, zkuste to prosím znovu!")
+        if not user or user.active == False:
+            flash("Tento administrátor neexistuje nebo byl zrušen!")
             return redirect(url_for("login"))
         elif not check_password_hash(user.password, password):
             flash("Zadali jste špatné heslo, zkuste to prosím znovu!")
@@ -189,7 +190,7 @@ def password(user_id):
     return render_template("admin/form.html", form=form, title=form_title)
 
 
-@app.route('/admin/register', methods=["GET", "POST"])
+@app.route('/admin/add-user', methods=["GET", "POST"])
 @admin_only
 def register():
     form = UserForm()
@@ -202,7 +203,8 @@ def register():
         new_user = User(
             email=form.email.data,
             password=hashed_password,
-            name=form.name.data
+            name=form.name.data,
+            active=True
         )
         db.session.add(new_user)
         db.session.commit()
@@ -210,6 +212,43 @@ def register():
     return render_template("admin/form.html", form=form, title=form_title)
 
 
+@app.route('/admin/users')
+@admin_only
+def administrators():
+    users_list = User.query.all()
+    return render_template("admin/admins.html", users=users_list)
+
+
+@app.route('/admin/switch/<int:user_id>')
+@admin_only
+def switch(user_id):
+    if user_id == 1:
+        return redirect(url_for('administrators'))
+    user = User.query.get(user_id)
+    if user.active == False:
+        user.active = True
+    else:
+        user.active = False
+    db.session.commit()
+    if user_id == current_user.id:
+        return redirect(url_for('logout'))
+    return redirect(url_for('administrators'))
+
+
+@app.route('/admin/delete/<int:user_id>')
+@admin_only
+def del_user(user_id):
+    if user_id == 1:
+        return redirect(url_for('administrators'))
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    if user_id == current_user.id:
+        return redirect(url_for('logout'))
+    return redirect(url_for('administrators'))
+
+
+# TODO: Admin route to send administrator a new password
 # TODO: Admin route to see stored messages
 # TODO: Admin route to set basic settings
 # TODO: Admin route to add custom pages
