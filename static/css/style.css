@@ -23,7 +23,7 @@ p {
 }
 
 body {
-    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     margin: 0;
     min-width: 500px;
@@ -524,7 +524,7 @@ iframe {
 input {
     font-size: 1rem;
     padding: 10px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 
 }
 
@@ -558,7 +558,7 @@ input:focus {
 }
 
 textarea {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     resize: vertical;
     padding: 10px;
