@@ -58,14 +58,20 @@ class ContactForm(FlaskForm):
         os.remove(f"{path}{filename}")
 
 
-# Login administrator
+# Administrator forms
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])
     submit = SubmitField("Přihlásit")
 
 
-# Add administrator
+class PasswordForm(FlaskForm):
+    old_password = PasswordField("Staré heslo", validators=[DataRequired()])
+    new_password = PasswordField("Nové heslo", validators=[DataRequired()])
+    new_again = PasswordField("Nové heslo pro kontrolu", validators=[DataRequired()])
+    submit = SubmitField("Změnit heslo")
+
+
 class UserForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])

@@ -1,0 +1,19 @@
+{% if current_user.is_authenticated %}
+
+    <div id="admin-container">
+        <div class="menu-admin">
+            <h3>Administrace</h3>
+            <ul>
+                <li><a href="#">Nastavení</a></li>                
+                <li><a href="#">Stránky</a></li>
+                <li><a href="#">Životopisy</a></li>
+                <li><a href="#">Administrátoři</a></li>
+                <li>&nbsp;</li>
+                <li><a href="{{ url_for('password', user_id=current_user.id) }}">Změnit heslo</a></li>
+                <li><a href="{{ url_for('logout') }}">Odhlásit</a></li>
+            </ul>
+        </div>
+        <div class="menu-header">&gt;</div>
+    </div>
+
+{% endif %}

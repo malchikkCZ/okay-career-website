@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
-from forms import ContactForm, LoginForm, UserForm, SectionForm, UploadSectionImg, PersonaForm, UploadPersonaImg, VideoForm
+from forms import ContactForm, LoginForm, PasswordForm, UserForm, SectionForm, UploadSectionImg, PersonaForm, UploadPersonaImg, VideoForm
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -34,14 +34,6 @@ def admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
-
-def superadmin_only(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.id != 1:
             return abort(403)
         return f(*args, **kwargs)
     return decorated_function
@@ -146,7 +138,7 @@ def sklady():
 
 
 # Admin routes
-@app.route('/login', methods=["GET", "POST"])
+@app.route('/admin', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     form_title = "Přihlášení"
@@ -167,13 +159,38 @@ def login():
 
 
 @app.route('/logout')
+@admin_only
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
 
+@app.route('/admin/update/<int:user_id>', methods=["GET", "POST"])
+@admin_only
+def password(user_id):
+    form = PasswordForm()
+    user = User.query.get(user_id)
+    if not user:
+        flash("Nejprve se musíte přihlásit!")
+        return redirect(url_for('login'))
+    form_title = f"Změnit heslo pro uživatele {user.name}"
+    if form.validate_on_submit():
+        old_password = form.old_password.data
+        if not check_password_hash(user.password, old_password):
+            flash("Původní heslo nesouhlasí, zkuste to prosím znovu!")
+            return redirect(url_for('password', user_id=user_id))
+        if form.new_password.data != form.new_again.data:
+            flash("Nová hesla nejsou stejná, zkuste to prosím znovu!")
+            return redirect(url_for('password', user_id=user_id))
+        hashed_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
+        user.password = hashed_password
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template("admin/form.html", form=form, title=form_title)
+
+
 @app.route('/admin/register', methods=["GET", "POST"])
-@superadmin_only
+@admin_only
 def register():
     form = UserForm()
     form_title = "Přidej uživatele"
@@ -193,7 +210,6 @@ def register():
     return render_template("admin/form.html", form=form, title=form_title)
 
 
-# TODO: Admin route to change password
 # TODO: Admin route to see stored messages
 # TODO: Admin route to set basic settings
 # TODO: Admin route to add custom pages
