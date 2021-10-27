@@ -116,6 +116,7 @@ nav {
     position: fixed;
     right: 0;
     z-index: 90;
+    padding-top: 5px;
 }
 
 .respmenu a {
@@ -126,9 +127,15 @@ nav {
     justify-content: flex-end;
     transition: color 0.5s;
     width: 100%;
+    text-transform: uppercase;
 }
 
 .respmenu a:hover {
+    color: #124d96;
+    text-decoration: none;
+}
+
+.respmenu a:active {
     color: #124d96;
     text-decoration: none;
 }
@@ -142,6 +149,7 @@ nav {
     padding: 0 10px;
     transition: background-color 0.5s;
     width: 200px;
+    padding-right: 30px;
 }
 
 .respmenu li:hover {
@@ -165,12 +173,6 @@ nav .rightbar a {
     text-transform: uppercase;
 }
 
-.rightbar a.has-divider {
-    border-left: 1px solid #fff;
-    padding-left: 20px;
-    margin-left: 10px;
-}
-
 .rightbarresp {
     display: none;
     position: absolute;
@@ -180,15 +182,6 @@ nav .rightbar a {
 .rightbarresp img {
     cursor: pointer;
     height: 30px;
-}
-
-.rightbarresp:hover .respmenu,
-.rightbarresp:active .respmenu {
-    display: block;
-}
-
-.respmenu:hover {
-    display: block;
 }
 
 
@@ -520,11 +513,21 @@ iframe {
 #email { grid-area: email; }
 #form-file { grid-area: file; }
 #message { grid-area: message; }
+#terms-block { grid-area: terms; }
 
 #submit {
     grid-area: submit;
     display: flex;
     justify-content: flex-start;
+}
+
+#terms-block {
+    display: flex;
+    align-items: flex-start;
+}
+
+.terms-text {
+    padding-left: 20px;
 }
 
 .file-button {
@@ -570,6 +573,7 @@ iframe {
         'name surname'
         'email file'
         'message message'
+        'terms terms'
         'submit submit';
     grid-gap: 20px;
 }
@@ -852,6 +856,7 @@ footer {
             'email'
             'file'
             'message'
+            'terms'
             'submit';
     }
 

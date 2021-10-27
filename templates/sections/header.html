@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"> 
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   <title>OKAY kariéra - {{ page_title }}</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -27,10 +28,28 @@
         </div>
 
         <div class="rightbarresp">
-        <img src="{{ url_for('static', filename='/images/menu-icon.svg') }}">
+        <img class="respicon" src="{{ url_for('static', filename='/images/menu-icon.svg') }}">
         <div class="respmenu">
             {% include 'snippets/menuitems.html' %}
         </div>
         </div>
     </div>
   </nav>
+
+  <script>
+    $('.respicon').on('tap mouseover click', function() {
+      if ($('.respmenu').css("display") == "block") {
+        $('.respmenu').css("display", "none");
+      } else {
+        $('.respmenu').css("display", "block");
+      }
+    });
+    $(document).on('tap click', function(evt) {
+      if (!$(evt.target).hasClass('respmenu')) {
+        $('.respmenu').css("display", "none");
+      }
+    });
+    $('.respmenu').on('mouseout', function() {
+      $('.respmenu').css("display", "none");
+    });
+  </script>
