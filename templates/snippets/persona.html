@@ -8,8 +8,8 @@
             </div>
             <div class="personacont">
                 <ul>
-                    <li>&phone; {{ persona.phone }}</li>
-                    <li>&#9993; <a href="{{ url_for('mainpage', context=persona.area, _anchor='contactForm') }}">{{ loc.buttons.contact[lang] }}</a></li>
+                    <li><i class="material-icons">phone</i> {{ persona.phone }}</li>
+                    <li><i class="material-icons">email</i> <a href="{{ url_for('mainpage', context=persona.area, _anchor='contactForm') }}">{{ loc.buttons.contact[lang] }}</a></li>
                 </ul>
             </div>
 

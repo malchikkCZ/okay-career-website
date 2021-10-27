@@ -119,6 +119,10 @@ nav {
     padding-top: 5px;
 }
 
+.respmenu:hover {
+    display: block !important;
+}
+
 .respmenu a {
     align-items: center;
     color: white;
@@ -666,6 +670,8 @@ textarea:focus {
 .personacont li {
     list-style-type: none;
     padding-left: 0;
+    display: flex;
+    align-items: center;
 }
 
 .personacont ul {
@@ -674,6 +680,10 @@ textarea:focus {
 
 .personacont a {
     color: white;
+}
+
+.personacont .material-icons {
+    padding-right: 10px;
 }
 
 .personainfo {
@@ -766,7 +776,7 @@ footer {
 
 /* Responsive */
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
 
     body {
         min-width: 100vw;
@@ -824,6 +834,7 @@ footer {
     .contR {
         padding: 10px;
         text-align: center;
+        max-width: 900px;
     }
 
     .ctabutton {
