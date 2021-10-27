@@ -22,16 +22,10 @@ class ContactForm(FlaskForm):
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
-    def send_email(self):
+    def send_email(self, path, filename):
         name = self.name.data
         surname = self.surname.data
         email = self.email.data
-        filename = secure_filename(self.file.data.filename)
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        path = os.path.join(basedir, "files")
-        if not os.path.exists(path):
-            os.makedirs(path)
-        self.file.data.save(f"{path}{filename}")
         message = self.message.data
 
         msg = MIMEMultipart()
@@ -41,7 +35,7 @@ class ContactForm(FlaskForm):
         msg.attach(MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
 
         payload = MIMEBase("application", "octate-stream")
-        with open(f"{path}{filename}", "rb") as file:
+        with open(os.path.join(path, filename), "rb") as file:
             payload.set_payload(file.read())
             encoders.encode_base64(payload)
             payload.add_header('Content-Disposition', 'attachement', filename=filename)
@@ -56,7 +50,6 @@ class ContactForm(FlaskForm):
                 to_addrs="malchikk@live.com",
                 msg=text
             )
-        os.remove(f"{path}{filename}")
 
 
 # Administrator forms

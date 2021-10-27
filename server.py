@@ -1,5 +1,7 @@
 import os
-from flask import Flask, render_template, redirect, url_for, flash, abort, request, json
+import datetime as dt
+import random
+from flask import Flask, render_template, redirect, url_for, flash, abort, request, json, send_file
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -79,11 +81,23 @@ class Persona(db.Model):
     image_url = db.Column(db.String(250), nullable=True)
     area = db.Column(db.String(50), nullable=False)
 
+
 class Video(db.Model):
     __tablename__ = "videos"
     id = db.Column(db.Integer, primary_key=True)
     video_url = db.Column(db.String(100), nullable=False)
     video_context = db.Column(db.String(100), nullable=False)
+
+
+class Candidate(db.Model):
+    __tablename__ = "candidates"
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.String(100), nullable=False)
+    fullname = db.Column(db.String(250), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    file = db.Column(db.String(250), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+
 
 db.create_all()
 
@@ -97,43 +111,41 @@ def index():
     return render_template("pages/index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
 
 
-@app.route('/centrala', methods=["GET", "POST"])
-def centrala():
+@app.route('/pages/<context>', methods=["GET", "POST"])
+def mainpage(context):
     is_sent = False
     lang, locale = set_language()
     form = ContactForm()
-    sections = Section.query.filter_by(context="centrala")
-    video = Video.query.filter_by(video_context="centrala").first()
+    sections = Section.query.filter_by(context=context)
+    video = Video.query.filter_by(video_context=context).first()
     if form.validate_on_submit():
-        form.send_email()
+        filename = secure_filename(form.file.data.filename)
+
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(basedir, "files")
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        fullpath = os.path.join(path, filename)
+        while os.path.isfile(fullpath):
+            extension = filename[-4:]
+            filename = filename[:-4] + str(random.randint(1000, 9999)) + extension
+            fullpath = os.path.join(path, filename)
+        form.file.data.save(fullpath)
+
+        new_candidate = Candidate(
+            timestamp=dt.datetime.now().strftime("%d-%m-%Y %H:%M"),
+            fullname=f"{form.surname.data} {form.name.data}",
+            email=form.email.data,
+            file=filename,
+            message=form.message.data
+        )
+        db.session.add(new_candidate)
+        db.session.commit()
+
+        form.send_email(path, filename)
         is_sent = True
-    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="centrala")
-
-
-@app.route('/prodejny', methods=["GET", "POST"])
-def prodejny():
-    is_sent = False
-    lang, locale = set_language()
-    form = ContactForm()
-    sections = Section.query.filter_by(context="prodejny")
-    video = Video.query.filter_by(video_context="prodejny").first()
-    if form.validate_on_submit():
-        form.send_email()
-        is_sent = True
-    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="prodejny")
-
-
-@app.route('/sklady', methods=["GET", "POST"])
-def sklady():
-    is_sent = False
-    lang, locale = set_language()
-    form = ContactForm()
-    sections = Section.query.filter_by(context="sklady")
-    video = Video.query.filter_by(video_context="sklady").first()
-    if form.validate_on_submit():
-        form.send_email()
-        is_sent = True
-    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context="sklady")
+    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context=context)
 
 
 # Admin routes
@@ -247,12 +259,39 @@ def del_user(user_id):
 
 
 # TODO: Admin route to send administrator a new password
-# TODO: Admin route to see stored messages
+
 # TODO: Admin route to set basic settings
 # TODO: Admin route to add custom pages
 # TODO: Admin route to customize top bar menu
 # TODO: Admin route to customize social networks in footer
 
+
+@app.route('/admin/candidates', methods=["GET", "POST"])
+@admin_only
+def candidates():
+    candidates_list = Candidate.query.all()
+    return render_template("admin/candidates.html", candidates=candidates_list)
+
+
+@app.route('/admin/del-candidate/<int:candidate_id>', methods=["GET", "POST"])
+@admin_only
+def del_candidate(candidate_id):
+    candidate = Candidate.query.get(candidate_id)
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(basedir, "files")
+    os.remove(os.path.join(path, candidate.file))
+    db.session.delete(candidate)
+    db.session.commit()
+    return redirect(url_for('candidates'))
+
+
+@app.route('/admin/download/<int:candidate_id>', methods=["GET", "POST"])
+@admin_only
+def download(candidate_id):
+    candidate = Candidate.query.get(candidate_id)
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(basedir, "files")
+    return send_file(os.path.join(path, candidate.file), as_attachment=True)
 
 # Admin section routes
 @app.route('/admin/add-section/<context>', methods=["GET", "POST"])
@@ -289,7 +328,7 @@ def upload_section_img(section_id):
         form.image.data.save(os.path.join(basedir, f"static/{img_file}"))
         section.image_url = img_file.replace("./static/", "")
         db.session.commit()
-        return redirect(url_for(context))
+        return redirect(url_for("mainpage", context=context))
     return render_template("admin/form.html", form=form, title=form_title)
 
 
@@ -306,7 +345,7 @@ def edit_section(section_id):
         section.body_cs = form.body_cs.data
         section.body_sk = form.body_sk.data
         db.session.commit()
-        return redirect(url_for(context))
+        return redirect(url_for("mainpage", context=context))
     return render_template("admin/form.html", form=form, title=form_title)
 
 
@@ -317,7 +356,7 @@ def delete_section(section_id):
     context = section.context
     db.session.delete(section)
     db.session.commit()
-    return redirect(url_for(context))
+    return redirect(url_for("mainpage", context=context))
 
 
 @app.route('/admin/add-video/<context>', methods=["GET", "POST"])
@@ -340,7 +379,7 @@ def add_video(context):
             )            
             db.session.add(new_video)
             db.session.commit()
-        return redirect(url_for(context))
+        return redirect(url_for("mainpage", context=context))
     return render_template("admin/form.html", form=form, title=form_title)
 
 
@@ -351,7 +390,7 @@ def delete_video(video_id):
     context = video.video_context
     db.session.delete(video)
     db.session.commit()
-    return redirect(url_for(context))
+    return redirect(url_for("mainpage", context=context))
 
 
 # Admin persona routes

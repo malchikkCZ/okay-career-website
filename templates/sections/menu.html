@@ -1,7 +1,7 @@
 <section id="menu">
 
     <div class="menuitem">
-        <a href="{{ url_for('centrala') }}">
+        <a href="{{ url_for('mainpage', context='centrala') }}">
       <img src="{{ url_for('static', filename='images/menuimg1.png') }}">
       <div class="menuitemtext">
         <p>{{ loc.menu_items.centrala[lang] }}</p>
@@ -10,7 +10,7 @@
     </div>
 
     <div class="menuitem">
-        <a href="{{ url_for('prodejny') }}">
+        <a href="{{ url_for('mainpage', context='prodejny') }}">
       <img src="{{ url_for('static', filename='images/menuimg2.png') }}">
       <div class="menuitemtext">
         <p>{{ loc.menu_items.prodejny[lang] }}</p>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="menuitem">
-        <a href="{{ url_for('sklady') }}">
+        <a href="{{ url_for('mainpage', context='sklady') }}">
       <img src="{{ url_for('static', filename='images/menuimg3.png') }}">
       <div class="menuitemtext">
         <p>{{ loc.menu_items.sklady[lang] }}</p>
