@@ -11,7 +11,7 @@
             <tr>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
-                <td class="text-right"><a href="#">Zaslat nové heslo</a></td>
+                <td class="text-right"><a href="{{ url_for('send_passwrd', user_id=user.id) }}">Zaslat nové heslo</a></td>
                 <td class="text-right">
                     {% if user.active == True %}
                         <span class="text-success"><strong>Aktivní</strong></span>

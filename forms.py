@@ -4,10 +4,12 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, TextAreaField, PasswordField, SubmitField, BooleanField, SelectField
+from flask_wtf.file import FileAllowed, FileField, FileRequired
+from wtforms import (BooleanField, PasswordField, SelectField, StringField,
+                     SubmitField, TextAreaField)
 from wtforms.validators import URL, DataRequired
 
 

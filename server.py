@@ -1,15 +1,23 @@
-import os
 import datetime as dt
-import random
-from flask import Flask, render_template, redirect, url_for, flash, abort, request, json, send_file
+import os
+import smtplib
+import string
+from functools import wraps
+from random import randint, sample
+
+from flask import (Flask, abort, flash, json, redirect, render_template,
+                   request, send_file, url_for)
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
-from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from flask_login import (LoginManager, UserMixin, current_user, login_required,
+                         login_user, logout_user)
 from flask_sqlalchemy import SQLAlchemy
-from forms import ContactForm, LoginForm, PasswordForm, UserForm, SectionForm, UploadSectionImg, PersonaForm, UploadPersonaImg, VideoForm, SetEmail, SetJson
-from functools import wraps
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
+
+from forms import (ContactForm, LoginForm, PasswordForm, PersonaForm,
+                   SectionForm, SetEmail, SetJson, UploadPersonaImg,
+                   UploadSectionImg, UserForm, VideoForm)
 
 
 app = Flask(__name__)
@@ -137,7 +145,7 @@ def mainpage(context):
         fullpath = os.path.join(path, filename)
         while os.path.isfile(fullpath):
             extension = filename[-4:]
-            filename = filename[:-4] + str(random.randint(1000, 9999)) + extension
+            filename = filename[:-4] + str(randint(1000, 9999)) + extension
             fullpath = os.path.join(path, filename)
         form.file.data.save(fullpath)
 
@@ -267,6 +275,29 @@ def del_user(user_id):
     return redirect(url_for('administrators'))
 
 
+# Admin route to send administrator a new password
+@app.route('/admin/send_passwrd/<int:user_id>')
+@admin_only
+def send_passwrd(user_id):
+    user = User.query.get(user_id)
+    chars = string.ascii_letters + string.digits
+    new_passwrd = "".join(sample(chars, 8))
+    while check_password_hash(user.password, new_passwrd):
+        new_passwrd = "".join(sample(chars, 8))
+    message = f"Subject:Nové heslo pro OKAY Kariera\n\nNové heslo do administrace: {new_passwrd}\nPo přihlášení si jej prosím změňte."
+    with smtplib.SMTP("smtp.gmail.com") as mailserver:
+        mailserver.starttls()
+        mailserver.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASS"))
+        mailserver.sendmail(
+            from_addr=os.environ.get("SMTP_USER"),
+            to_addrs=user.email,
+            msg=message.encode('utf8')
+        )
+    user.password = generate_password_hash(new_passwrd, method="pbkdf2:sha256", salt_length=8)
+    db.session.commit()
+    return redirect(url_for('administrators'))
+
+
 # Admin route to set basic settings
 @app.route('/admin/settings')
 @admin_only
@@ -303,8 +334,6 @@ def set_json():
     form.json.data = lang_data
     return render_template("admin/form.html", form=form, title=form_title)
 
-
-# TODO: Admin route to send administrator a new password
 
 # TODO: Admin route to add custom pages
 # TODO: Admin route to customize top bar menu
