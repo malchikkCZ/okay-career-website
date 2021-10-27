@@ -42,6 +42,8 @@ def admin_only(f):
 
 def set_language():
     lang = request.accept_languages.best_match(['cs','sk'])
+    if not lang:
+        lang = "cs"
     basedir = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(basedir, "static", "lang.json"), encoding="utf-8") as json_data:
         data = json.load(json_data)
