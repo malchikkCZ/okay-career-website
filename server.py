@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
-from forms import ContactForm, LoginForm, PasswordForm, UserForm, SectionForm, UploadSectionImg, PersonaForm, UploadPersonaImg, VideoForm
+from forms import ContactForm, LoginForm, PasswordForm, UserForm, SectionForm, UploadSectionImg, PersonaForm, UploadPersonaImg, VideoForm, SetEmail, SetJson
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -43,13 +43,19 @@ def admin_only(f):
 def set_language():
     lang = request.accept_languages.best_match(['cs','sk'])
     basedir = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(basedir, "static/lang.json"), encoding="utf-8") as json_data:
+    with open(os.path.join(basedir, "static", "lang.json"), encoding="utf-8") as json_data:
         data = json.load(json_data)
-    print(lang)
     return lang, data
 
 
 # Configure tables
+class Setting(db.Model):
+    __tablename__ = "settings"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    value = db.Column(db.String(250), nullable=False)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -143,7 +149,8 @@ def mainpage(context):
         db.session.add(new_candidate)
         db.session.commit()
 
-        form.send_email(path, filename)
+        email = Setting.query.filter_by(name="email").first().value
+        form.send_email(path, filename, email)
         is_sent = True
     return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context=context)
 
@@ -258,9 +265,45 @@ def del_user(user_id):
     return redirect(url_for('administrators'))
 
 
+# Admin route to set basic settings
+@app.route('/admin/settings')
+@admin_only
+def settings():
+    return render_template("admin/settings.html")
+
+
+@app.route('/admin/set-email', methods=["GET", "POST"])
+@admin_only
+def set_email():
+    form_title = "Nastavení primární adresy pro zasílání pošty"
+    setting = Setting.query.filter_by(name="email").first()
+    form = SetEmail(obj=setting)
+    if form.validate_on_submit():
+        setting.value = form.value.data
+        db.session.commit()
+        return redirect(url_for('settings'))
+    return render_template("admin/form.html", form=form, title=form_title)
+
+
+@app.route('/admin/set-json', methods=["GET", "POST"])
+@admin_only
+def set_json():
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(basedir, "static", "lang.json"), encoding="utf-8") as json_data:
+        lang_data = json_data.read()
+    form = SetJson()
+    form_title = "Nastavení jazykového JSONu, buďte maximálně opatrní!"
+    if form.validate_on_submit():
+        new_json = form.json.data
+        with open(os.path.join(basedir, "static", "lang.json"), "w", encoding="utf-8") as json_data:
+            json_data.write(new_json)
+        return redirect(url_for("settings"))
+    form.json.data = lang_data
+    return render_template("admin/form.html", form=form, title=form_title)
+
+
 # TODO: Admin route to send administrator a new password
 
-# TODO: Admin route to set basic settings
 # TODO: Admin route to add custom pages
 # TODO: Admin route to customize top bar menu
 # TODO: Admin route to customize social networks in footer

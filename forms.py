@@ -6,8 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from werkzeug.utils import secure_filename
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, TextAreaField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import URL, DataRequired
 
@@ -22,7 +21,7 @@ class ContactForm(FlaskForm):
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
-    def send_email(self, path, filename):
+    def send_email(self, path, filename, recipient):
         name = self.name.data
         surname = self.surname.data
         email = self.email.data
@@ -30,7 +29,7 @@ class ContactForm(FlaskForm):
 
         msg = MIMEMultipart()
         msg["From"] = email
-        msg["To"] = "malchikk@live.com"
+        msg["To"] = recipient
         msg["Subject"] = f"{surname} {name} má zájem o práci"
         msg.attach(MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
 
@@ -47,7 +46,7 @@ class ContactForm(FlaskForm):
             mailserver.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASS"))
             mailserver.sendmail(
                 from_addr=email,
-                to_addrs="malchikk@live.com",
+                to_addrs=recipient,
                 msg=text
             )
 
@@ -73,6 +72,16 @@ class UserForm(FlaskForm):
     submit = SubmitField("Uložit")
 
 
+class SetEmail(FlaskForm):
+    value = StringField("Email", validators=[DataRequired()])
+    submit = SubmitField("Uložit")
+
+
+class SetJson(FlaskForm):
+    json = TextAreaField("Jazykový JSON", validators=[DataRequired()], render_kw={"rows": 20})
+    submit = SubmitField("Uložit")
+
+
 # Add page section form
 class SectionForm(FlaskForm):
     title_cs = StringField("Český titulek", validators=[DataRequired()])
@@ -83,7 +92,7 @@ class SectionForm(FlaskForm):
 
 
 class UploadSectionImg(FlaskForm):
-    image = FileField("Obrázek", validators=[FileRequired()])
+    image = FileField("Obrázek", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
     submit = SubmitField("Uložit")
 
 
@@ -104,5 +113,5 @@ class PersonaForm(FlaskForm):
 
 
 class UploadPersonaImg(FlaskForm):
-    image = FileField("Fotografie", validators=[FileRequired()])
+    image = FileField("Fotografie", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
     submit = SubmitField("Uložit")
