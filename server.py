@@ -39,14 +39,12 @@ def admin_only(f):
     return decorated_function
 
 def set_language():
-    lang = str(request.accept_languages)
+    lang = request.accept_languages.best_match(['cs','sk'])
     basedir = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(basedir, "static/lang.json"), encoding="utf-8") as json_data:
         data = json.load(json_data)
-    if "sk" in lang.lower():
-        return "sk", data
-    else:
-        return "cs", data
+    print(lang)
+    return lang, data
 
 
 # Configure tables

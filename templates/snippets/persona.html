@@ -9,7 +9,7 @@
             <div class="personacont">
                 <ul>
                     <li>&phone; {{ persona.phone }}</li>
-                    <li>&#9993; <a href="mailto:{{ persona.email }}">{{ persona.email }}</a></li>
+                    <li>&#9993; <a href="{{ url_for(persona.area, _anchor='contactForm') }}">{{ loc.buttons.contact[lang] }}</a></li>
                 </ul>
             </div>
 

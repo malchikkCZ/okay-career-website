@@ -8,7 +8,7 @@ from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from werkzeug.utils import secure_filename
-from wtforms import StringField, TextAreaField, PasswordField, SubmitField
+from wtforms import StringField, TextAreaField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import URL, DataRequired
 
 
@@ -19,6 +19,7 @@ class ContactForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
     message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
+    terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
     def send_email(self):
@@ -105,7 +106,7 @@ class PersonaForm(FlaskForm):
     position_sk = StringField("Název pozice (slovensky)", validators=[DataRequired()])
     phone = StringField("Tel. číslo", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
-    area = StringField("Oblast působnosti", validators=[DataRequired()])
+    area = SelectField("Oblast působnosti", choices=["centrala", "prodejny", "sklady"], validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
 

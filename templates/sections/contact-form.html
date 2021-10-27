@@ -19,6 +19,9 @@
                  
             </div>
             {{ form.message(placeholder=loc.form_fields.message[lang]) }}
+            <div id="terms-block">
+                {{ form.terms(value='n') }}<div class="terms-text">{{ loc.form_fields.terms[lang] }}</div>
+            </div>
             {{ form.submit(value=loc.buttons.send_form[lang]) }}
         </div>
 
