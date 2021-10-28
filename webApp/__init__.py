@@ -15,7 +15,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import (ContactForm, LoginForm, PasswordForm, PersonaForm,
+from webApp.forms import (ContactForm, LoginForm, PasswordForm, PersonaForm,
                    SectionForm, SetEmail, SetJson, UploadPersonaImg,
                    UploadSectionImg, UserForm, VideoForm)
 
@@ -544,8 +544,3 @@ def delete_persona(pers_id):
     db.session.delete(persona)
     db.session.commit()
     return redirect(url_for("index"))
-
-
-# TODO: Remove debug settings below
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port="5000", debug=True)

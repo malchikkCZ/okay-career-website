@@ -67,8 +67,7 @@ class LoginForm(FlaskForm):
 class PasswordForm(FlaskForm):
     old_password = PasswordField("Staré heslo", validators=[DataRequired()])
     new_password = PasswordField("Nové heslo", validators=[DataRequired()])
-    new_again = PasswordField(
-        "Nové heslo pro kontrolu", validators=[DataRequired()])
+    new_again = PasswordField("Nové heslo pro kontrolu", validators=[DataRequired()])
     submit = SubmitField("Změnit heslo")
 
 
@@ -85,8 +84,7 @@ class SetEmail(FlaskForm):
 
 
 class SetJson(FlaskForm):
-    json = TextAreaField("Jazykový JSON", validators=[
-                         DataRequired()], render_kw={"rows": 20})
+    json = TextAreaField("Jazykový JSON", validators=[DataRequired()], render_kw={"rows": 20})
     submit = SubmitField("Uložit")
 
 
@@ -100,32 +98,43 @@ class SectionForm(FlaskForm):
 
 
 class UploadSectionImg(FlaskForm):
-    image = FileField("Obrázek", validators=[FileRequired(), FileAllowed(
-        ['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
+    image = FileField(
+        "Obrázek", 
+        validators=[
+            FileRequired(), 
+            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')
+            ]
+        )
     submit = SubmitField("Uložit")
 
 
 class VideoForm(FlaskForm):
-    video_url = StringField("Adresa odkazu na YouTube",
-                            validators=[DataRequired(), URL()])
+    video_url = StringField("Adresa odkazu na YouTube", validators=[DataRequired(), URL()])
     submit = SubmitField("Uložit")
 
 
 # Add persona form
 class PersonaForm(FlaskForm):
     fullname = StringField("Jméno a příjmení", validators=[DataRequired()])
-    position_cs = StringField("Název pozice (česky)",
-                              validators=[DataRequired()])
+    position_cs = StringField("Název pozice (česky)", validators=[DataRequired()])
     position_sk = StringField(
         "Název pozice (slovensky)", validators=[DataRequired()])
     phone = StringField("Tel. číslo", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
-    area = SelectField("Oblast působnosti", choices=[
-                       "centrala", "prodejny", "sklady"], validators=[DataRequired()])
+    area = SelectField(
+        "Oblast působnosti", 
+        choices=["centrala", "prodejny", "sklady"], 
+        validators=[DataRequired()]
+        )
     submit = SubmitField("Uložit")
 
 
 class UploadPersonaImg(FlaskForm):
-    image = FileField("Fotografie", validators=[FileRequired(), FileAllowed(
-        ['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
+    image = FileField(
+        "Fotografie", 
+        validators=[
+            FileRequired(), 
+            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')
+            ]
+        )
     submit = SubmitField("Uložit")
