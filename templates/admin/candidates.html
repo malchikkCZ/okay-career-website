@@ -1,0 +1,41 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<section id="main" class="container">
+
+    <h3>Uchazeči</h3>
+
+    <table class="table">
+        {% for candidate in candidates | sort(attribute='id', reverse=True) %}
+            {% set span = 2 %}
+            {% set id = candidate.id %}
+            <tr>
+                <td>{{ candidate.timestamp }}</td>
+                <td>{{ candidate.fullname }}</td>
+                <td>{{ candidate.email }}</td>
+                <td class="text-right">
+                    <a href="#" id="anchor_{{ id }}" onclick="show_message({{ id }})">Zobrazit</a>
+                    <a style="margin-left: 5px;" href="{{ url_for('download', candidate_id=id) }}"
+                        title="{{ candidate.file }}">Stáhnout</a>
+                </td>
+                {% if current_user.id == 1 %}
+                    {% set span = 3 %}
+                    <td class="text-right">
+                        <a href="{{ url_for('del_candidate', candidate_id=id) }}" title="Smazat">&#10060;</a>
+                    </td>
+                {% endif %}
+            </tr>
+            <tr id="message_{{ id }}" style="display: none;">
+                <td colspan="2"></td>
+                <td colspan="{{ span }}">{{ candidate.message | safe }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a class="btn btn-success" href="{{ url_for('index') }}">Zpět</a>
+
+</section>
+
+<script src="{{ url_for('static', filename='js/show_msg.js') }}"></script>
+{% endblock %}

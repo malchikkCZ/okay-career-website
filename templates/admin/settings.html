@@ -1,0 +1,16 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<section id="main" class="container">
+    
+    <h3>Nastavení aplikace</h3>
+
+    <p>&nbsp;</p>
+
+    <a class="btn btn-success" href="{{ url_for('index') }}">Zpět</a>
+    <a class="btn btn-default" href="{{ url_for('set_email') }}">Primární email</a>
+    <a class="btn btn-default" href="{{ url_for('set_json') }}">Jazykový JSON</a>
+
+</section>
+{% endblock %}

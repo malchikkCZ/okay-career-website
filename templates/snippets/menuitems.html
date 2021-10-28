@@ -1,9 +1,11 @@
 <ul>
-    <li><a href="{{ url_for('index', _anchor='main') }}">{{ loc.top_menu.about[lang] }}</a></li>
-    <li><a href="https://www.jobs.cz/prace/?company%5B%5D=79138" target="_blank">{{ loc.top_menu.job_offer[lang] }}</a></li>
-    <li><a href="{{ url_for('index', _anchor='contacts') }}">{{ loc.top_menu.contacts[lang] }}</a></li>
-    {% if current_user.is_authenticated %}
-        <li><a class="has-divider" href="#">Administrace</a></li>
-        <li><a href="{{ url_for('logout') }}">Odhlásit</a></li>
-    {% endif %}
+    <li>
+        <a href="{{ url_for('index', _anchor='main') }}">{{ loc.top_menu.about[lang] }}</a>
+    </li>
+    <li>
+        <a href="https://www.jobs.cz/prace/?company%5B%5D=79138" target="_blank">{{ loc.top_menu.job_offer[lang] }}</a>
+    </li>
+    <li>
+        <a href="{{ url_for('index', _anchor='contacts') }}">{{ loc.top_menu.contacts[lang] }}</a>
+    </li>
 </ul>

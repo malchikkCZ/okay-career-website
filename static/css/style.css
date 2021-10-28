@@ -23,7 +23,7 @@ p {
 }
 
 body {
-    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     margin: 0;
     min-width: 500px;
@@ -33,31 +33,6 @@ hr {
     border: 1px dashed #124d96;
     border-bottom: none;
     margin-bottom: 100px;
-}
-
-.admin {
-    display: flex;
-    justify-content: center;
-    font-size: .7em;
-}
-
-.admin a {
-    border-left: 1px solid #124d96;
-    padding: 0 10px;
-    color: #124d96;
-    font-weight: bold;
-}
-
-.admin a:first-child {
-    border-left: none;
-}
-
-.has-top-padding {
-    padding-top: 20px;
-}
-
-.has-bottom-padding {
-    padding-bottom: 20px;
 }
 
 .container {
@@ -82,9 +57,19 @@ section {
 }
 
 @keyframes hide-alert {
-    0% {top: 80px; opacity: 1;}
-    50% {top: 80px; opacity: 1;}
-    100% {top: 0px;}
+    0% {
+        top: 80px;
+        opacity: 1;
+    }
+
+    50% {
+        top: 80px;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0px;
+    }
 }
 
 .alert {
@@ -141,6 +126,11 @@ nav {
     position: fixed;
     right: 0;
     z-index: 90;
+    padding-top: 5px;
+}
+
+.respmenu:hover {
+    display: block !important;
 }
 
 .respmenu a {
@@ -151,9 +141,15 @@ nav {
     justify-content: flex-end;
     transition: color 0.5s;
     width: 100%;
+    text-transform: uppercase;
 }
 
 .respmenu a:hover {
+    color: #124d96;
+    text-decoration: none;
+}
+
+.respmenu a:active {
     color: #124d96;
     text-decoration: none;
 }
@@ -167,6 +163,7 @@ nav {
     padding: 0 10px;
     transition: background-color 0.5s;
     width: 200px;
+    padding-right: 30px;
 }
 
 .respmenu li:hover {
@@ -190,12 +187,6 @@ nav .rightbar a {
     text-transform: uppercase;
 }
 
-.rightbar a.has-divider {
-    border-left: 1px solid #fff;
-    padding-left: 20px;
-    margin-left: 10px;
-}
-
 .rightbarresp {
     display: none;
     position: absolute;
@@ -207,13 +198,82 @@ nav .rightbar a {
     height: 30px;
 }
 
-.rightbarresp:hover .respmenu,
-.rightbarresp:active .respmenu {
-    display: block;
+
+/* Admin menu and pages */
+
+.admin {
+    display: flex;
+    justify-content: center;
+    font-size: .7em;
 }
 
-.respmenu:hover {
+.admin a {
+    border-left: 1px solid #124d96;
+    padding: 0 10px;
+    color: #124d96;
+    font-weight: bold;
+}
+
+.admin a:first-child {
+    border-left: none;
+}
+
+#admin-container {
     display: block;
+    position: fixed;
+    height: 40vh;
+    margin: 30vh 0;
+    width: 300px;
+    left: -270px;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: .5;
+    z-index: 100;
+    border: 2px solid #000;
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    transition: all 1s ease;
+    display: flex;
+    align-items: center;
+}
+
+#admin-container:hover {
+    left: 0;
+    opacity: 1;
+}
+
+.menu-admin {
+    width: 270px;
+    margin: 0;
+    padding-left: 50px;
+    color: #fff;
+    line-height: 1.5em;
+}
+
+.menu-admin ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.menu-admin a {
+    color: #fff;
+}
+
+.menu-header {
+    width: 30px;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.has-top-padding {
+    padding-top: 20px;
+}
+
+.has-bottom-padding {
+    padding-bottom: 20px;
 }
 
 
@@ -462,16 +522,43 @@ iframe {
     font-size: 1.2rem;
 }
 
-#name { grid-area: name; }
-#surname { grid-area: surname; }
-#email { grid-area: email; }
-#form-file { grid-area: file; }
-#message { grid-area: message; }
+#name {
+    grid-area: name;
+}
+
+#surname {
+    grid-area: surname;
+}
+
+#email {
+    grid-area: email;
+}
+
+#form-file {
+    grid-area: file;
+}
+
+#message {
+    grid-area: message;
+}
+
+#terms-block {
+    grid-area: terms;
+}
 
 #submit {
     grid-area: submit;
     display: flex;
     justify-content: flex-start;
+}
+
+#terms-block {
+    display: flex;
+    align-items: flex-start;
+}
+
+.terms-text {
+    padding-left: 20px;
 }
 
 .file-button {
@@ -517,6 +604,7 @@ iframe {
         'name surname'
         'email file'
         'message message'
+        'terms terms'
         'submit submit';
     grid-gap: 20px;
 }
@@ -524,7 +612,7 @@ iframe {
 input {
     font-size: 1rem;
     padding: 10px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 
 }
 
@@ -558,7 +646,7 @@ input:focus {
 }
 
 textarea {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     resize: vertical;
     padding: 10px;
@@ -609,6 +697,8 @@ textarea:focus {
 .personacont li {
     list-style-type: none;
     padding-left: 0;
+    display: flex;
+    align-items: center;
 }
 
 .personacont ul {
@@ -617,6 +707,10 @@ textarea:focus {
 
 .personacont a {
     color: white;
+}
+
+.personacont .material-icons {
+    padding-right: 10px;
 }
 
 .personainfo {
@@ -709,7 +803,7 @@ footer {
 
 /* Responsive */
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
 
     body {
         min-width: 100vw;
@@ -767,6 +861,7 @@ footer {
     .contR {
         padding: 10px;
         text-align: center;
+        max-width: 900px;
     }
 
     .ctabutton {
@@ -799,6 +894,7 @@ footer {
             'email'
             'file'
             'message'
+            'terms'
             'submit';
     }
 
@@ -920,6 +1016,7 @@ footer {
     #videoFrame {
         display: none;
     }
+
 }
 
 @media (max-width: 760px) {
@@ -929,6 +1026,10 @@ footer {
     }
 
     .leftbar h1 {
+        display: none;
+    }
+
+    #admin-container {
         display: none;
     }
 }
