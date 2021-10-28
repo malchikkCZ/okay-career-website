@@ -36,9 +36,11 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 def admin_only(f):
     @wraps(f)
@@ -48,8 +50,9 @@ def admin_only(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 def set_language():
-    lang = request.accept_languages.best_match(['cs','sk'])
+    lang = request.accept_languages.best_match(['cs', 'sk'])
     if not lang:
         lang = "cs"
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -179,7 +182,7 @@ def login():
             return redirect(url_for("login"))
         elif not check_password_hash(user.password, password):
             flash("Zadali jste špatné heslo, zkuste to prosím znovu!")
-            return redirect(url_for("login")) 
+            return redirect(url_for("login"))
         else:
             login_user(user)
             return redirect(url_for("index"))
@@ -210,7 +213,8 @@ def password(user_id):
         if form.new_password.data != form.new_again.data:
             flash("Nová hesla nejsou stejná, zkuste to prosím znovu!")
             return redirect(url_for('password', user_id=user_id))
-        hashed_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
+        hashed_password = generate_password_hash(
+            form.new_password.data, method="pbkdf2:sha256", salt_length=8)
         user.password = hashed_password
         db.session.commit()
         return redirect(url_for('index'))
@@ -226,7 +230,8 @@ def register():
         if User.query.filter_by(email=form.email.data).first():
             flash("Tento administrátor již existuje v naší databázi!")
             return redirect(url_for("register"))
-        hashed_password = generate_password_hash(form.password.data, method="pbkdf2:sha256", salt_length=8)
+        hashed_password = generate_password_hash(
+            form.password.data, method="pbkdf2:sha256", salt_length=8)
         new_user = User(
             email=form.email.data,
             password=hashed_password,
@@ -287,13 +292,15 @@ def send_passwrd(user_id):
     message = f"Subject:Nové heslo pro OKAY Kariera\n\nNové heslo do administrace: {new_passwrd}\nPo přihlášení si jej prosím změňte."
     with smtplib.SMTP("smtp.gmail.com") as mailserver:
         mailserver.starttls()
-        mailserver.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASS"))
+        mailserver.login(user=os.environ.get("SMTP_USER"),
+                         password=os.environ.get("SMTP_PASS"))
         mailserver.sendmail(
             from_addr=os.environ.get("SMTP_USER"),
             to_addrs=user.email,
             msg=message.encode('utf8')
         )
-    user.password = generate_password_hash(new_passwrd, method="pbkdf2:sha256", salt_length=8)
+    user.password = generate_password_hash(
+        new_passwrd, method="pbkdf2:sha256", salt_length=8)
     db.session.commit()
     return redirect(url_for('administrators'))
 
@@ -367,7 +374,9 @@ def download(candidate_id):
     path = os.path.join(basedir, "files")
     return send_file(os.path.join(path, candidate.file), as_attachment=True)
 
+
 # Admin section routes
+
 @app.route('/admin/add-section/<context>', methods=["GET", "POST"])
 @admin_only
 def add_section(context):
@@ -450,7 +459,7 @@ def add_video(context):
             new_video = Video(
                 video_url=form.video_url.data,
                 video_context=context
-            )            
+            )
             db.session.add(new_video)
             db.session.commit()
         return redirect(url_for("mainpage", context=context))
@@ -468,6 +477,7 @@ def delete_video(video_id):
 
 
 # Admin persona routes
+
 @app.route('/admin/add-persona', methods=["GET", "POST"])
 @admin_only
 def add_persona():
@@ -507,7 +517,7 @@ def upload_persona_img(pers_id):
         db.session.commit()
         return redirect(url_for("index"))
     return render_template("admin/form.html", form=form, title=form_title)
-        
+
 
 @app.route('/admin/edit-persona/<int:pers_id>', methods=["GET", "POST"])
 @admin_only

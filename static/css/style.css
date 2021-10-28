@@ -57,9 +57,19 @@ section {
 }
 
 @keyframes hide-alert {
-    0% {top: 80px; opacity: 1;}
-    50% {top: 80px; opacity: 1;}
-    100% {top: 0px;}
+    0% {
+        top: 80px;
+        opacity: 1;
+    }
+
+    50% {
+        top: 80px;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0px;
+    }
 }
 
 .alert {
@@ -216,7 +226,7 @@ nav .rightbar a {
     width: 300px;
     left: -270px;
     top: 0;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     opacity: .5;
     z-index: 100;
     border: 2px solid #000;
@@ -512,12 +522,29 @@ iframe {
     font-size: 1.2rem;
 }
 
-#name { grid-area: name; }
-#surname { grid-area: surname; }
-#email { grid-area: email; }
-#form-file { grid-area: file; }
-#message { grid-area: message; }
-#terms-block { grid-area: terms; }
+#name {
+    grid-area: name;
+}
+
+#surname {
+    grid-area: surname;
+}
+
+#email {
+    grid-area: email;
+}
+
+#form-file {
+    grid-area: file;
+}
+
+#message {
+    grid-area: message;
+}
+
+#terms-block {
+    grid-area: terms;
+}
 
 #submit {
     grid-area: submit;
@@ -990,9 +1017,6 @@ footer {
         display: none;
     }
 
-    #admin-container {
-        display: none;
-    }
 }
 
 @media (max-width: 760px) {
@@ -1002,6 +1026,10 @@ footer {
     }
 
     .leftbar h1 {
+        display: none;
+    }
+
+    #admin-container {
         display: none;
     }
 }

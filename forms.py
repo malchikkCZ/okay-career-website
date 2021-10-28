@@ -19,7 +19,8 @@ class ContactForm(FlaskForm):
     surname = StringField("Příjmení", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
-    message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
+    message = TextAreaField("Váš vzkaz", validators=[
+                            DataRequired()], render_kw={"rows": 8})
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
@@ -33,19 +34,22 @@ class ContactForm(FlaskForm):
         msg["From"] = email
         msg["To"] = recipient
         msg["Subject"] = f"{surname} {name} má zájem o práci"
-        msg.attach(MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
+        msg.attach(
+            MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
 
         payload = MIMEBase("application", "octate-stream")
         with open(os.path.join(path, filename), "rb") as file:
             payload.set_payload(file.read())
             encoders.encode_base64(payload)
-            payload.add_header('Content-Disposition', 'attachement', filename=filename)
+            payload.add_header('Content-Disposition',
+                               'attachement', filename=filename)
             msg.attach(payload)
         text = msg.as_string()
 
         with smtplib.SMTP("smtp.gmail.com") as mailserver:
             mailserver.starttls()
-            mailserver.login(user=os.environ.get("SMTP_USER"), password=os.environ.get("SMTP_PASS"))
+            mailserver.login(user=os.environ.get("SMTP_USER"),
+                             password=os.environ.get("SMTP_PASS"))
             mailserver.sendmail(
                 from_addr=email,
                 to_addrs=recipient,
@@ -63,7 +67,8 @@ class LoginForm(FlaskForm):
 class PasswordForm(FlaskForm):
     old_password = PasswordField("Staré heslo", validators=[DataRequired()])
     new_password = PasswordField("Nové heslo", validators=[DataRequired()])
-    new_again = PasswordField("Nové heslo pro kontrolu", validators=[DataRequired()])
+    new_again = PasswordField(
+        "Nové heslo pro kontrolu", validators=[DataRequired()])
     submit = SubmitField("Změnit heslo")
 
 
@@ -80,7 +85,8 @@ class SetEmail(FlaskForm):
 
 
 class SetJson(FlaskForm):
-    json = TextAreaField("Jazykový JSON", validators=[DataRequired()], render_kw={"rows": 20})
+    json = TextAreaField("Jazykový JSON", validators=[
+                         DataRequired()], render_kw={"rows": 20})
     submit = SubmitField("Uložit")
 
 
@@ -94,26 +100,32 @@ class SectionForm(FlaskForm):
 
 
 class UploadSectionImg(FlaskForm):
-    image = FileField("Obrázek", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
+    image = FileField("Obrázek", validators=[FileRequired(), FileAllowed(
+        ['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
     submit = SubmitField("Uložit")
 
 
 class VideoForm(FlaskForm):
-    video_url = StringField("Adresa odkazu na YouTube", validators=[DataRequired(), URL()])
+    video_url = StringField("Adresa odkazu na YouTube",
+                            validators=[DataRequired(), URL()])
     submit = SubmitField("Uložit")
 
 
 # Add persona form
 class PersonaForm(FlaskForm):
     fullname = StringField("Jméno a příjmení", validators=[DataRequired()])
-    position_cs = StringField("Název pozice (česky)", validators=[DataRequired()])
-    position_sk = StringField("Název pozice (slovensky)", validators=[DataRequired()])
+    position_cs = StringField("Název pozice (česky)",
+                              validators=[DataRequired()])
+    position_sk = StringField(
+        "Název pozice (slovensky)", validators=[DataRequired()])
     phone = StringField("Tel. číslo", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
-    area = SelectField("Oblast působnosti", choices=["centrala", "prodejny", "sklady"], validators=[DataRequired()])
+    area = SelectField("Oblast působnosti", choices=[
+                       "centrala", "prodejny", "sklady"], validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
 
 class UploadPersonaImg(FlaskForm):
-    image = FileField("Fotografie", validators=[FileRequired(), FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
+    image = FileField("Fotografie", validators=[FileRequired(), FileAllowed(
+        ['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')])
     submit = SubmitField("Uložit")

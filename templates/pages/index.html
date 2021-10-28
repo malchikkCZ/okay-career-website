@@ -3,29 +3,26 @@
 {% include 'sections/header.html' %}
 {% include 'snippets/admin-menu.html' %}
 
-  <header>
+<header>
     <div class="header">
-      <img id="headerimg" src="{{ url_for('static', filename='images/headimg.png') }}">
-      <video autoplay muted id="headervid" poster="{{ url_for('static', filename='images/headimg.png') }}">
-          <source src="{{ url_for('static', filename='media/video.mp4') }}" type="video/mp4">
-          <img src="{{ url_for('static', filename='images/headimg.png') }}">
-      </video>
+        <img id="headerimg" src="{{ url_for('static', filename='images/headimg.png') }}">
+        <video autoplay muted id="headervid" poster="{{ url_for('static', filename='images/headimg.png') }}">
+            <source src="{{ url_for('static', filename='media/video.mp4') }}" type="video/mp4">
+            <img src="{{ url_for('static', filename='images/headimg.png') }}">
+        </video>
 
-      <div class="ctabutton">
-          <a href="#menu">{{ loc.buttons.main_cta[lang] }}</a>
-      </div>
+        <div class="ctabutton">
+            <a href="#menu">{{ loc.buttons.main_cta[lang] }}</a>
+        </div>
     </div>
-  </header>
-  <script src="{{ url_for('static', filename='js/video.js') }}"></script>
+</header>
+<script src="{{ url_for('static', filename='js/video.js') }}"></script>
 
 {% include 'sections/menu.html' %}
 
-  <section id="main">
-
+<section id="main">
     {% include "sections/sections.html" %}
-
-  </section>
-
+</section>
 
 {% include 'sections/contacts.html' %}
 {% include 'sections/footer.html' %}

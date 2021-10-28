@@ -8,18 +8,25 @@
             </div>
             <div class="personacont">
                 <ul>
-                    <li><i class="material-icons">phone</i> {{ persona.phone }}</li>
-                    <li><i class="material-icons">email</i> <a href="{{ url_for('mainpage', context=persona.area, _anchor='contactForm') }}">{{ loc.buttons.contact[lang] }}</a></li>
+                    <li>
+                        <i class="material-icons">phone</i>{{ persona.phone }}
+                    </li>
+                    <li>
+                        <i class="material-icons">email</i>
+                        <a href="{{ url_for('mainpage', context=persona.area, _anchor='contactForm') }}">
+                            {{ loc.buttons.contact[lang] }}
+                        </a>
+                    </li>
                 </ul>
             </div>
 
         </div>
     </div>
     {% if current_user.is_authenticated %}
-    <div class="admin">
-        <a href="{{ url_for('upload_persona_img', pers_id=persona.id) }}">Změnit obrázek</a>
-        <a href="{{ url_for('edit_persona', pers_id=persona.id) }}">Upravit kontakt</a>
-        <a href="{{ url_for('delete_persona', pers_id=persona.id) }}">Smazat kontakt</a>
-    </div>
+        <div class="admin">
+            <a href="{{ url_for('upload_persona_img', pers_id=persona.id) }}">Změnit obrázek</a>
+            <a href="{{ url_for('edit_persona', pers_id=persona.id) }}">Upravit kontakt</a>
+            <a href="{{ url_for('delete_persona', pers_id=persona.id) }}">Smazat kontakt</a>
+        </div>
     {% endif %}
 </div>

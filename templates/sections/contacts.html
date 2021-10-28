@@ -3,13 +3,13 @@
     {% for persona in persona_list %}
         {% include "snippets/persona.html" %}
     {% endfor %}
-    
+
 </section>
 
 {% if current_user.is_authenticated %}
-<div class="has-top-padding">
-    <div class="admin">
-        <a href="{{ url_for('add_persona') }}">Přidat personalistu</a>
+    <div class="has-top-padding">
+        <div class="admin">
+            <a href="{{ url_for('add_persona') }}">Přidat personalistu</a>
+        </div>
     </div>
-</div>
 {% endif %}
