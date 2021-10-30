@@ -10,7 +10,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import (BooleanField, PasswordField, SelectField, StringField,
                      SubmitField, TextAreaField)
-from wtforms.validators import URL, DataRequired
+from wtforms.validators import URL, DataRequired, EqualTo
 
 
 # Contact form
@@ -67,13 +67,14 @@ class LoginForm(FlaskForm):
 class PasswordForm(FlaskForm):
     old_password = PasswordField("Staré heslo", validators=[DataRequired()])
     new_password = PasswordField("Nové heslo", validators=[DataRequired()])
-    new_again = PasswordField("Nové heslo pro kontrolu", validators=[DataRequired()])
+    new_again = PasswordField("Nové heslo pro kontrolu", validators=[EqualTo('new_password'), DataRequired()])
     submit = SubmitField("Změnit heslo")
 
 
 class UserForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])
+    password_again = PasswordField("Nové heslo pro kontrolu", validators=[EqualTo('password'), DataRequired()])
     name = StringField("Uživatelské jméno", validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
