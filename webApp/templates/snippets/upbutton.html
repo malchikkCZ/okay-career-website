@@ -1,4 +1,20 @@
-<div id="upbutton" onclick="topFunction()">
+<div id="upbutton">
     <div class="arrowUp"></div>
 </div>
-<script src="{{ url_for('static', filename='js/backbtn.js') }}"></script>
+
+<script>
+    let upbutton = document.getElementById("upbutton");
+
+    window.onscroll = () => {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        upbutton.style.display = "inline-flex";
+      } else {
+        upbutton.style.display = "none";
+      }
+    };
+    
+    upbutton.addEventListener("click", () => {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
+</script>

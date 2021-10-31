@@ -20,7 +20,16 @@
         </div>
     </div>
 </header>
-<script src="{{ url_for('static', filename='js/video.js') }}"></script>
+
+<script>
+    let video = document.getElementById("headervid");
+    let image = document.getElementById("headerimg");
+
+    video.addEventListener("ended", () => {
+    video.style.display = "none";
+    image.style.display = "block";
+    });
+</script>
 
 {% include 'sections/menu.html' %}
 

@@ -8,14 +8,6 @@
 
     <p>&nbsp;</p>
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-        <p style="color: red; font-weight: bold;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
-
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='body_cs') }}
     {{ ckeditor.config(name='body_sk') }}

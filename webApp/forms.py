@@ -1,24 +1,24 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
-from wtforms import (BooleanField, PasswordField, SelectField, StringField,
-                     SubmitField, TextAreaField)
+from wtforms import BooleanField, PasswordField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import URL, DataRequired, EqualTo
 
 
-# Contact form
+### Contact form for candidates
+
 class ContactForm(FlaskForm):
     name = StringField("Jméno", validators=[DataRequired()])
     surname = StringField("Příjmení", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
-    message = TextAreaField("Váš vzkaz", validators=[
-                            DataRequired()], render_kw={"rows": 8})
+    message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
 
-# Administrator forms
+### Administrator forms
+
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])
@@ -48,7 +48,8 @@ class SetJson(FlaskForm):
     submit = SubmitField("Uložit")
 
 
-# Add page section form
+### Forms to manage frontend content
+ 
 class SectionForm(FlaskForm):
     title_cs = StringField("Český titulek", validators=[DataRequired()])
     title_sk = StringField("Slovenský titulek", validators=[DataRequired()])
@@ -73,7 +74,8 @@ class VideoForm(FlaskForm):
     submit = SubmitField("Uložit")
 
 
-# Add persona form
+### Forms to manage personalists
+
 class PersonaForm(FlaskForm):
     fullname = StringField("Jméno a příjmení", validators=[DataRequired()])
     position_cs = StringField("Název pozice (česky)", validators=[DataRequired()])

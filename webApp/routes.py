@@ -2,11 +2,10 @@ import os
 from datetime import datetime
 from random import randint
 
-from flask import (flash, json, redirect, render_template, request,
-                   send_file, url_for)
+from flask import flash, json, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 from webApp import app, db
 from webApp.forms import (ContactForm, LoginForm, PasswordForm, PersonaForm,
@@ -25,7 +24,8 @@ def set_language():
     return lang, data
 
 
-# Frontend routes
+### Frontend routes
+
 @app.route('/')
 @app.route('/home')
 @app.route('/index')
@@ -74,7 +74,8 @@ def mainpage(context):
     return render_template("mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, context=context)
 
 
-# Admin routes
+### Admin routes for administrators
+
 @app.route('/admin', methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -84,10 +85,10 @@ def login():
         password = form.password.data
         user = User.query.filter_by(email=email).first()
         if not user or user.active == False:
-            flash("Tento administrátor neexistuje nebo byl zrušen!")
+            flash("Tento administrátor neexistuje nebo byl zrušen!", category="danger")
             return redirect(url_for("login"))
         elif not check_password_hash(user.password, password):
-            flash("Zadali jste špatné heslo, zkuste to prosím znovu!")
+            flash("Zadali jste špatné heslo, zkuste to prosím znovu!", category="danger")
             return redirect(url_for("login"))
         else:
             login_user(user)
@@ -110,18 +111,19 @@ def password(user_id):
     form = PasswordForm()
     user = User.query.get(user_id)
     if not user:
-        flash("Nejprve se musíte přihlásit!")
+        flash("Něco se pokazilo, nejprve se zkuste přihlásit.", category="info")
         return redirect(url_for('login'))
     form_title = f"Změnit heslo pro uživatele {user.name}"
     if form.validate_on_submit():
         old_password = form.old_password.data
         if not check_password_hash(user.password, old_password):
-            flash("Původní heslo nesouhlasí, zkuste to prosím znovu!")
+            flash("Původní heslo nesouhlasí, zkuste to prosím znovu!", category="danger")
             return redirect(url_for('password', user_id=user_id))
         hashed_password = generate_password_hash(
             form.new_password.data, method="pbkdf2:sha256", salt_length=8)
         user.password = hashed_password
         db.session.commit()
+        flash("Vaše heslo bylo úspěšně změněno.")
         return redirect(url_for('index'))
     return render_template("admin/form.html", form=form, title=form_title)
 
@@ -140,7 +142,7 @@ def register():
     form_title = "Přidej uživatele"
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
-            flash("Tento administrátor již existuje v naší databázi!")
+            flash("Tento administrátor již existuje v naší databázi!", category="info")
             return redirect(url_for("register"))
         new_user = User(
             email=form.email.data,
@@ -150,17 +152,18 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
+        flash(f"Nový uživatel byl úspěšně vytvořen, přihlašovací údaje byly zaslány na email: {new_user.email}", category="success")
         return redirect(url_for("index"))
     return render_template("admin/form.html", form=form, title=form_title)
 
 
-# Admin route to send administrator a new password
 @app.route('/admin/send_passwrd/<int:user_id>')
 @login_required
 def send_passwrd(user_id):
     user = User.query.get(user_id)
     user.password = user.generate_password(user.email)
     db.session.commit()
+    flash(f"Přihlašovací údaje s novým heslem byly zaslány na email: {user.email}", category="success")
     return redirect(url_for('administrators'))
 
 
@@ -177,6 +180,7 @@ def switch(user_id):
     db.session.commit()
     if user_id == current_user.id:
         return redirect(url_for('logout'))
+    flash(f"Status uživatele {user.name} byl úspěšně změněn.", category="success")
     return redirect(url_for('administrators'))
 
 
@@ -184,16 +188,19 @@ def switch(user_id):
 @login_required
 def del_user(user_id):
     if user_id == 1:
+        flash("Superadmin účet není možné smazat.", category="info")
         return redirect(url_for('administrators'))
     user = User.query.get(user_id)
     db.session.delete(user)
     db.session.commit()
     if user_id == current_user.id:
         return redirect(url_for('logout'))
+    flash(f"Uživatel {user.name} byl nenávratně odstraněn z databáze.", category="success")
     return redirect(url_for('administrators'))
 
 
-# Admin route to set basic settings
+### Admin routes to set basic settings
+
 @app.route('/admin/settings')
 @login_required
 def settings():
@@ -209,6 +216,7 @@ def set_email():
     if form.validate_on_submit():
         setting.value = form.value.data
         db.session.commit()
+        flash(f"Primární email pro zasílání pošty byl změněn na {form.value.data}.", category="success")
         return redirect(url_for('settings'))
     return render_template("admin/form.html", form=form, title=form_title)
 
@@ -225,10 +233,13 @@ def set_json():
         new_json = form.json.data
         with open(os.path.join(basedir, "static", "lang.json"), "w", encoding="utf-8") as json_data:
             json_data.write(new_json)
+        flash("Jazykový JSON byl úspěšně uložen.", category="success")
         return redirect(url_for("settings"))
     form.json.data = lang_data
     return render_template("admin/form.html", form=form, title=form_title)
 
+
+### Admin routes for candidates
 
 @app.route('/admin/candidates', methods=["GET", "POST"])
 @login_required
@@ -241,11 +252,13 @@ def candidates():
 @login_required
 def del_candidate(candidate_id):
     candidate = Candidate.query.get(candidate_id)
+    name = candidate.fullname
     basedir = os.path.abspath(os.path.dirname(__file__))
     path = os.path.join(basedir, "files")
     os.remove(os.path.join(path, candidate.file))
     db.session.delete(candidate)
     db.session.commit()
+    flash(f"Uchazeč {name} byl odstraněn z databáze.", category="success")
     return redirect(url_for('candidates'))
 
 
@@ -258,7 +271,7 @@ def download(candidate_id):
     return send_file(os.path.join(path, candidate.file), as_attachment=True)
 
 
-# Admin section routes
+### Admin routes for frontend sections
 
 @app.route('/admin/add-section/<context>', methods=["GET", "POST"])
 @login_required
@@ -359,7 +372,7 @@ def delete_video(video_id):
     return redirect(url_for("mainpage", context=context))
 
 
-# Admin persona routes
+### Admin routes for personalists
 
 @app.route('/admin/add-persona', methods=["GET", "POST"])
 @login_required

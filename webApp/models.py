@@ -1,15 +1,14 @@
 import os
 import smtplib
 import string
-
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from random import sample
 
 from flask_login import UserMixin
-from random import sample
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
 from webApp import db, login_manager
 

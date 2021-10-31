@@ -18,4 +18,22 @@
     </div>
 </nav>
 
-<script src="{{ url_for('static', filename='js/respmenu.js') }}"></script>
+<script>
+    $('.respicon').on('tap mouseover click', () => {
+        if ($('.respmenu').css("display") == "block") {
+            $('.respmenu').css("display", "none");
+        } else {
+            $('.respmenu').css("display", "block");
+        }
+    });
+    
+    $(document).on('tap click', (evt) => {
+        if (!$(evt.target).hasClass('respmenu')) {
+            $('.respmenu').css("display", "none");
+        }
+    });
+    
+    $('.respmenu').on('mouseout', () => {
+        $('.respmenu').css("display", "none");
+    });
+</script>
