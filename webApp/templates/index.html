@@ -1,7 +1,11 @@
-{% set page_title = loc.pages.index[lang] %}
 {% set context = "index" %}
-{% include 'sections/header.html' %}
-{% include 'snippets/admin-menu.html' %}
+{% extends 'base.html' %}
+
+{% block title %}
+{{ loc.pages[context][lang]}}
+{% endblock %}
+
+{% block content %}
 
 <header>
     <div class="header">
@@ -16,7 +20,16 @@
         </div>
     </div>
 </header>
-<script src="{{ url_for('static', filename='js/video.js') }}"></script>
+
+<script>
+    let video = document.getElementById("headervid");
+    let image = document.getElementById("headerimg");
+
+    video.addEventListener("ended", () => {
+    video.style.display = "none";
+    image.style.display = "block";
+    });
+</script>
 
 {% include 'sections/menu.html' %}
 
@@ -25,4 +38,5 @@
 </section>
 
 {% include 'sections/contacts.html' %}
-{% include 'sections/footer.html' %}
+
+{% endblock %}

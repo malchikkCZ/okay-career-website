@@ -1,0 +1,57 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<section id="main" class="p-5">
+
+    <h3>Uchazeči</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Čas uložení</th>
+                <th>Jméno uchazeče</th>
+                <th>Kontaktní email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for candidate in candidates | sort(attribute='id', reverse=True) %}
+            {% set span = 3 %}
+            {% set id = candidate.id %}
+            <tr>
+                <td class="col-2">{{ candidate.timestamp }}</td>
+                <td>{{ candidate.fullname }}</td>
+                <td>{{ candidate.email }}</td>
+                <td class="col-3 text-right">
+                    <a class="btn btn-sm btn-outline-primary" href="#" id="anchor_{{ id }}" onclick="show_message({{ id }})">Zobrazit zprávu</a>
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('download', candidate_id=id) }}"
+                        title="{{ candidate.file }}">Stáhnout životopis</a>
+                    {% if current_user.id == 1 %}
+                        <a class="btn btn-sm btn-danger" href="{{ url_for('del_candidate', candidate_id=id) }}" title="Smazat">&times;</a>
+                {% endif %}
+            </tr>
+            <tr id="message_{{ id }}" style="display: none;">
+                <td></td>
+                <td colspan="3">{{ candidate.message | safe }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</section>
+
+<script>
+    function show_message(id) {
+        let anchor = document.getElementById("anchor_" + id);
+        let msg = document.getElementById("message_" + id);
+        
+        if (msg.style.display == "none") {
+            msg.style.display = "table-row";
+            anchor.innerHTML = "Skrýt zprávu";
+        } else {
+            msg.style.display = "none";
+            anchor.innerHTML = "Zobrazit zprávu";
+        }
+    }
+</script>
+{% endblock %}

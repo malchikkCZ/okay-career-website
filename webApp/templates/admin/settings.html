@@ -1,0 +1,14 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<section id="main" class="p-5">
+    
+    <h3>Nastavení aplikace</h3>
+
+    <p>&nbsp;</p>
+
+    <a class="btn btn-outline-primary" href="{{ url_for('set_email') }}">Primární email</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('set_json') }}">Jazykový JSON</a>
+
+</section>
+{% endblock %}

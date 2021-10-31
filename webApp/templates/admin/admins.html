@@ -1,0 +1,69 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<section id="main" class="p-5">
+
+    <h3>Administrátoři</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users | sort(attribute='active', reverse=True) %}
+            {% set display = "" %}
+            {% if user.active != True %}
+                {% set display = "d-none" %}
+            {% endif %}
+            <tr class="{{ display }}">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td class="col-1">
+                    {% if user.active == True %}
+                        <span class="btn btn-sm btn-success btn-block"><strong>Aktivní</strong></span>
+                    {% else %}
+                        <span class="btn btn-sm btn-danger btn-block"><strong>Neaktivní</strong></span>
+                    {% endif %}
+                </td>
+                <td class="col-3 text-right">
+                    {% if user.id != 1 %}
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('switch', user_id=user.id) }}">Změnit status</a>
+                    {% else %}
+                        <a class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true">Změnit status</a>
+                    {% endif %}
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('send_passwrd', user_id=user.id) }}">Zaslat nové heslo</a>
+                    {% if current_user.id == 1 %}
+                        <a class="btn btn-sm btn-danger" href="{{ url_for('del_user', user_id=user.id) }}" title="Smazat">&times;</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-outline-danger" id="togglebtn" href="#">Zobrazit neaktivní</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('register') }}">Přidat administrátora</a>
+
+</section>
+
+<script>
+    let hiddens = document.querySelectorAll(".d-none");
+    let button = document.getElementById("togglebtn");
+
+    button.addEventListener("click", function() {
+        for (let hidden of hiddens) {
+            hidden.classList.toggle("d-table-row");
+        }
+        if (button.innerHTML == "Skrýt neaktivní") {
+            button.innerHTML = "Zobrazit neaktivní";
+        } else {
+            button.innerHTML = "Skrýt neaktivní";
+        }
+    });
+</script>
+{% endblock %}

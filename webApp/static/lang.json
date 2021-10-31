@@ -41,6 +41,12 @@
             "sk": "Daj nám o sebe vedieť"
         }
     },
+    "alerts": {
+        "email_sent": {
+            "cs": "Vaše zpráva byla úspěšně odeslána. Děkujeme a brzy se Vám ozveme!",
+            "sk": "Vaša správa bola úspešne odoslaná. Ďakujeme a čoskoro sa Vám ozveme!"
+        }
+    },
     "form_fields": {
         "name": {
             "cs": "Jméno",
@@ -64,7 +70,7 @@
         },
         "terms": {
             "cs": "Souhlasím se zpracováním mnou poskytnutých údajů pro potřeby výběrového řízení na pracovní pozici společností OKAY s.r.o., IČO: 60719257, Kšírova 676/259, Brno, Horní Heršpice, v souladu s obecným nařízením o ochraně osobních údajů (EU) 2016/679.",
-            "sk": "Souhlasím se zpracováním mnou poskytnutých údajů pro potřeby výběrového řízení na pracovní pozici společností OKAY s.r.o., IČO: 60719257, Kšírova 676/259, Brno, Horní Heršpice, v souladu s obecným nařízením o ochraně osobních údajů (EU) 2016/679."
+            "sk": "Súhlasím so spracovaním mnou poskytnutých údajov pre potreby výberového konania na pracovnej pozícii spoločností OKAY s.r.o., IČO: 60719257, Kšírova 676/259, Brno, Horní Heršpice, v súlade so všeobecným nariadením o ochrane osobných údajov (EU) 2016/679."
         }
     },
     "menu_items": {
