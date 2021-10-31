@@ -1,35 +1,18 @@
 import os
-import smtplib
-import string
 from datetime import datetime
-from functools import wraps
-from random import randint, sample
+from random import randint
 
-from flask import (abort, flash, json, redirect, render_template, request,
+from flask import (flash, json, redirect, render_template, request,
                    send_file, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
-from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from webApp import app, db, login_manager
+from webApp import app, db
 from webApp.forms import (ContactForm, LoginForm, PasswordForm, PersonaForm,
                           SectionForm, SetEmail, SetJson, UploadPersonaImg,
                           UploadSectionImg, UserForm, VideoForm)
 from webApp.models import Candidate, Persona, Section, Setting, User, Video
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-def admin_only(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
 
 
 def set_language():
@@ -44,16 +27,17 @@ def set_language():
 
 # Frontend routes
 @app.route('/')
+@app.route('/home')
+@app.route('/index')
 def index():
     lang, locale = set_language()
     sections = Section.query.filter_by(context="index")
     persona_list = Persona.query.all()
-    return render_template("pages/index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
+    return render_template("index.html", lang=lang, loc=locale, sections=sections, persona_list=persona_list)
 
 
 @app.route('/pages/<context>', methods=["GET", "POST"])
 def mainpage(context):
-    is_sent = False
     lang, locale = set_language()
     form = ContactForm()
     sections = Section.query.filter_by(context=context)
@@ -80,13 +64,14 @@ def mainpage(context):
             file=filename,
             message=form.message.data
         )
+        recipient = Setting.query.filter_by(name="email").first().value
+        new_candidate.send_by_email(recipient, fullpath)
         db.session.add(new_candidate)
         db.session.commit()
-
-        email = Setting.query.filter_by(name="email").first().value
-        form.send_email(path, filename, email)
-        is_sent = True
-    return render_template("pages/mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, success=is_sent, context=context)
+        flash(locale["alerts"]["email_sent"][lang])
+        return redirect(url_for('mainpage', context=context))
+    
+    return render_template("mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, context=context)
 
 
 # Admin routes
@@ -106,19 +91,21 @@ def login():
             return redirect(url_for("login"))
         else:
             login_user(user)
+            flash(f"Jste přihlášen(a) jako: {user.name}")
             return redirect(url_for("index"))
     return render_template("admin/form.html", form=form, title=form_title)
 
 
 @app.route('/logout')
-@admin_only
+@login_required
 def logout():
     logout_user()
+    flash(f"Byl(a) jste úspěšně odhlášen(a).")
     return redirect(url_for('index'))
 
 
 @app.route('/admin/update/<int:user_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def password(user_id):
     form = PasswordForm()
     user = User.query.get(user_id)
@@ -139,8 +126,15 @@ def password(user_id):
     return render_template("admin/form.html", form=form, title=form_title)
 
 
+@app.route('/admin/users')
+@login_required
+def administrators():
+    users_list = User.query.all()
+    return render_template("admin/admins.html", users=users_list)
+
+
 @app.route('/admin/add-user', methods=["GET", "POST"])
-@admin_only
+@login_required
 def register():
     form = UserForm()
     form_title = "Přidej uživatele"
@@ -148,11 +142,9 @@ def register():
         if User.query.filter_by(email=form.email.data).first():
             flash("Tento administrátor již existuje v naší databázi!")
             return redirect(url_for("register"))
-        hashed_password = generate_password_hash(
-            form.password.data, method="pbkdf2:sha256", salt_length=8)
         new_user = User(
             email=form.email.data,
-            password=hashed_password,
+            password=User.generate_password(form.email.data),
             name=form.name.data,
             active=True
         )
@@ -162,15 +154,18 @@ def register():
     return render_template("admin/form.html", form=form, title=form_title)
 
 
-@app.route('/admin/users')
-@admin_only
-def administrators():
-    users_list = User.query.all()
-    return render_template("admin/admins.html", users=users_list)
+# Admin route to send administrator a new password
+@app.route('/admin/send_passwrd/<int:user_id>')
+@login_required
+def send_passwrd(user_id):
+    user = User.query.get(user_id)
+    user.password = user.generate_password(user.email)
+    db.session.commit()
+    return redirect(url_for('administrators'))
 
 
 @app.route('/admin/switch/<int:user_id>')
-@admin_only
+@login_required
 def switch(user_id):
     if user_id == 1:
         return redirect(url_for('administrators'))
@@ -186,7 +181,7 @@ def switch(user_id):
 
 
 @app.route('/admin/delete/<int:user_id>')
-@admin_only
+@login_required
 def del_user(user_id):
     if user_id == 1:
         return redirect(url_for('administrators'))
@@ -198,40 +193,15 @@ def del_user(user_id):
     return redirect(url_for('administrators'))
 
 
-# Admin route to send administrator a new password
-@app.route('/admin/send_passwrd/<int:user_id>')
-@admin_only
-def send_passwrd(user_id):
-    user = User.query.get(user_id)
-    chars = string.ascii_letters + string.digits
-    new_passwrd = "".join(sample(chars, 8))
-    while check_password_hash(user.password, new_passwrd):
-        new_passwrd = "".join(sample(chars, 8))
-    message = f"Subject:Nové heslo pro OKAY Kariera\n\nNové heslo do administrace: {new_passwrd}\nPo přihlášení si jej prosím změňte."
-    with smtplib.SMTP("smtp.gmail.com") as mailserver:
-        mailserver.starttls()
-        mailserver.login(user=os.environ.get("SMTP_USER"),
-                         password=os.environ.get("SMTP_PASS"))
-        mailserver.sendmail(
-            from_addr=os.environ.get("SMTP_USER"),
-            to_addrs=user.email,
-            msg=message.encode('utf8')
-        )
-    user.password = generate_password_hash(
-        new_passwrd, method="pbkdf2:sha256", salt_length=8)
-    db.session.commit()
-    return redirect(url_for('administrators'))
-
-
 # Admin route to set basic settings
 @app.route('/admin/settings')
-@admin_only
+@login_required
 def settings():
     return render_template("admin/settings.html")
 
 
 @app.route('/admin/set-email', methods=["GET", "POST"])
-@admin_only
+@login_required
 def set_email():
     form_title = "Nastavení primární adresy pro zasílání pošty"
     setting = Setting.query.filter_by(name="email").first()
@@ -244,7 +214,7 @@ def set_email():
 
 
 @app.route('/admin/set-json', methods=["GET", "POST"])
-@admin_only
+@login_required
 def set_json():
     basedir = os.path.abspath(os.path.dirname(__file__))
     with open(os.path.join(basedir, "static", "lang.json"), encoding="utf-8") as json_data:
@@ -261,14 +231,14 @@ def set_json():
 
 
 @app.route('/admin/candidates', methods=["GET", "POST"])
-@admin_only
+@login_required
 def candidates():
     candidates_list = Candidate.query.all()
     return render_template("admin/candidates.html", candidates=candidates_list)
 
 
 @app.route('/admin/del-candidate/<int:candidate_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def del_candidate(candidate_id):
     candidate = Candidate.query.get(candidate_id)
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -280,7 +250,7 @@ def del_candidate(candidate_id):
 
 
 @app.route('/admin/download/<int:candidate_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def download(candidate_id):
     candidate = Candidate.query.get(candidate_id)
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -291,7 +261,7 @@ def download(candidate_id):
 # Admin section routes
 
 @app.route('/admin/add-section/<context>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def add_section(context):
     form = SectionForm()
     form_title = f"Přidej nový odstavec na stránce: {context}"
@@ -311,7 +281,7 @@ def add_section(context):
 
 
 @app.route('/admin/upload-section-image/<int:section_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def upload_section_img(section_id):
     form = UploadSectionImg()
     section = Section.query.get(section_id)
@@ -329,7 +299,7 @@ def upload_section_img(section_id):
 
 
 @app.route('/admin/edit_section/<int:section_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def edit_section(section_id):
     section = Section.query.get(section_id)
     context = section.context
@@ -346,7 +316,7 @@ def edit_section(section_id):
 
 
 @app.route('/admin/delete-section/<int:section_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def delete_section(section_id):
     section = Section.query.get(section_id)
     context = section.context
@@ -356,7 +326,7 @@ def delete_section(section_id):
 
 
 @app.route('/admin/add-video/<context>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def add_video(context):
     video = Video.query.filter_by(video_context=context).first()
     if video:
@@ -380,7 +350,7 @@ def add_video(context):
 
 
 @app.route('/admin/delete-video/<int:video_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def delete_video(video_id):
     video = Video.query.get(video_id)
     context = video.video_context
@@ -392,7 +362,7 @@ def delete_video(video_id):
 # Admin persona routes
 
 @app.route('/admin/add-persona', methods=["GET", "POST"])
-@admin_only
+@login_required
 def add_persona():
     form = PersonaForm()
     form_title = "Přidej personalistu"
@@ -416,7 +386,7 @@ def add_persona():
 
 
 @app.route('/admin/upload-persona-image/<int:pers_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def upload_persona_img(pers_id):
     form = UploadPersonaImg()
     persona = Persona.query.get(pers_id)
@@ -433,7 +403,7 @@ def upload_persona_img(pers_id):
 
 
 @app.route('/admin/edit-persona/<int:pers_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def edit_persona(pers_id):
     persona = Persona.query.get(pers_id)
     form = PersonaForm(obj=persona)
@@ -451,7 +421,7 @@ def edit_persona(pers_id):
 
 
 @app.route('/admin/delete-persona/<int:pers_id>', methods=["GET", "POST"])
-@admin_only
+@login_required
 def delete_persona(pers_id):
     persona = Persona.query.get(pers_id)
     db.session.delete(persona)

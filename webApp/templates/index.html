@@ -1,7 +1,11 @@
-{% set page_title = loc.pages.index[lang] %}
 {% set context = "index" %}
-{% include 'sections/header.html' %}
-{% include 'snippets/admin-menu.html' %}
+{% extends 'base.html' %}
+
+{% block title %}
+{{ loc.pages[context][lang]}}
+{% endblock %}
+
+{% block content %}
 
 <header>
     <div class="header">
@@ -25,4 +29,5 @@
 </section>
 
 {% include 'sections/contacts.html' %}
-{% include 'sections/footer.html' %}
+
+{% endblock %}

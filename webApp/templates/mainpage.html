@@ -1,21 +1,13 @@
-{% if context == "centrala" %}
-    {% set page_title = loc.pages.centrala[lang] %}
-{% elif context == "prodejny" %}
-    {% set page_title = loc.pages.prodejny[lang] %}
-{% elif context == "sklady" %}
-    {% set page_title = loc.pages.sklady[lang] %}
-{% else %}
-    {% set page_title = loc.pages.index[lang] %}
-{% endif %}
+{% extends 'base.html' %}
 
-{% include 'sections/header.html' %}
-{% include 'sections/alert.html' %}
-{% include 'snippets/admin-menu.html' %}
+{% block title %}
+{{ loc.pages[context][lang] }}
+{% endblock %}
+
+{% block content %}
 
 <section id="main" class="topmost">
-
     {% include "sections/sections.html" %}
-
 </section>
 
 {% if video %}
@@ -37,4 +29,5 @@
 
 {% include 'sections/contact-form.html' %}
 {% include 'sections/menu.html' %}
-{% include 'sections/footer.html' %}
+
+{% endblock %}

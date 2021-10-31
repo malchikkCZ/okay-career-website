@@ -1,10 +1,3 @@
-import os
-import smtplib
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
@@ -24,38 +17,6 @@ class ContactForm(FlaskForm):
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
-    def send_email(self, path, filename, recipient):
-        name = self.name.data
-        surname = self.surname.data
-        email = self.email.data
-        message = self.message.data
-
-        msg = MIMEMultipart()
-        msg["From"] = email
-        msg["To"] = recipient
-        msg["Subject"] = f"{surname} {name} má zájem o práci"
-        msg.attach(
-            MIMEText(f"Zpráva od:\n\n{surname} {name}\n{email}\n\n{message}", "plain"))
-
-        payload = MIMEBase("application", "octate-stream")
-        with open(os.path.join(path, filename), "rb") as file:
-            payload.set_payload(file.read())
-            encoders.encode_base64(payload)
-            payload.add_header('Content-Disposition',
-                               'attachement', filename=filename)
-            msg.attach(payload)
-        text = msg.as_string()
-
-        with smtplib.SMTP("smtp.gmail.com") as mailserver:
-            mailserver.starttls()
-            mailserver.login(user=os.environ.get("SMTP_USER"),
-                             password=os.environ.get("SMTP_PASS"))
-            mailserver.sendmail(
-                from_addr=email,
-                to_addrs=recipient,
-                msg=text
-            )
-
 
 # Administrator forms
 class LoginForm(FlaskForm):
@@ -73,8 +34,6 @@ class PasswordForm(FlaskForm):
 
 class UserForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Heslo", validators=[DataRequired()])
-    password_again = PasswordField("Nové heslo pro kontrolu", validators=[EqualTo('password'), DataRequired()])
     name = StringField("Uživatelské jméno", validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
