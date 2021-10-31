@@ -1,8 +1,8 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'admin/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
-<section id="main" class="container">
+<section id="main" class="p-5">
 
     <h3>{{ title }}</h3>
 
@@ -19,7 +19,7 @@
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='body_cs') }}
     {{ ckeditor.config(name='body_sk') }}
-    {{ wtf.quick_form(form, novalidate=True)}}
+    {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
 
 </section>
 {% endblock %}
