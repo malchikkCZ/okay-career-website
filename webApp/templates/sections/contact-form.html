@@ -19,6 +19,10 @@
 
             {{ form.message(placeholder=loc.form_fields.message[lang]) }}
 
+            <div id="recaptcha">
+                {{ form.recaptcha }}
+            </div>
+
             <div id="terms-block">
                 {{ form.terms(value='n') }}<div class="terms-text">{{ loc.form_fields.terms[lang] }}</div>
             </div>

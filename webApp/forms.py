@@ -1,6 +1,7 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
+from flask_wtf.recaptcha.fields import RecaptchaField
 from wtforms import BooleanField, PasswordField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import URL, DataRequired, EqualTo
 
@@ -13,6 +14,7 @@ class ContactForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     file = FileField("Životopis", validators=[FileRequired()])
     message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
+    recaptcha = RecaptchaField()
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 

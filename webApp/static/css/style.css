@@ -542,6 +542,10 @@ iframe {
     grid-area: message;
 }
 
+#recaptcha {
+    grid-area: recaptcha;
+}
+
 #terms-block {
     grid-area: terms;
 }
@@ -605,6 +609,7 @@ iframe {
         'email file'
         'message message'
         'terms terms'
+        'recaptcha recaptcha'
         'submit submit';
     grid-gap: 20px;
 }
@@ -895,6 +900,7 @@ footer {
             'file'
             'message'
             'terms'
+            'recaptcha'
             'submit';
     }
 
