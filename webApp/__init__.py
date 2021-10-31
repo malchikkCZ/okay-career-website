@@ -14,7 +14,7 @@ Bootstrap(app)
 
 # Configure recaptcha
 app.config['RECAPTCHA_USE_SSL'] = False
-app.config['RECAPTCHA_PUBLIC_KEY'] = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LdEcwYdAAAAAJ7PsG4W16LCo0VoU5WzVhFfzNdq'
 app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get('RECAPTCHA_PRIVATE_KEY')
 
 # Initialize database

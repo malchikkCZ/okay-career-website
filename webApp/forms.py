@@ -1,9 +1,8 @@
 from flask_ckeditor import CKEditorField
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileField, FileRequired
-from flask_wtf.recaptcha.fields import RecaptchaField
+from flask_wtf import FlaskForm, RecaptchaField, Recaptcha
+from flask_wtf.file import FileAllowed, FileField, FileRequired, FileSize
 from wtforms import BooleanField, PasswordField, SelectField, StringField, SubmitField, TextAreaField
-from wtforms.validators import URL, DataRequired, EqualTo
+from wtforms.validators import URL, DataRequired, EqualTo, Email
 
 
 ### Contact form for candidates
@@ -11,10 +10,10 @@ from wtforms.validators import URL, DataRequired, EqualTo
 class ContactForm(FlaskForm):
     name = StringField("Jméno", validators=[DataRequired()])
     surname = StringField("Příjmení", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
-    file = FileField("Životopis", validators=[FileRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
+    file = FileField("Životopis", validators=[FileRequired(), FileSize(max_size=5242880, message="Příloha formuláře níže musí být menší než 5 MB.")])
     message = TextAreaField("Váš vzkaz", validators=[DataRequired()], render_kw={"rows": 8})
-    recaptcha = RecaptchaField()
+    recaptcha = RecaptchaField(validators=[Recaptcha(message="Prosím potvrďte ve formuláři níže, že nejste robot.")])
     terms = BooleanField("Souhlas", validators=[DataRequired()])
     submit = SubmitField("Odeslat")
 
@@ -22,7 +21,7 @@ class ContactForm(FlaskForm):
 ### Administrator forms
 
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
     password = PasswordField("Heslo", validators=[DataRequired()])
     submit = SubmitField("Přihlásit")
 
@@ -35,7 +34,7 @@ class PasswordForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
     name = StringField("Uživatelské jméno", validators=[DataRequired()])
     submit = SubmitField("Uložit")
 
@@ -65,7 +64,8 @@ class UploadSectionImg(FlaskForm):
         "Obrázek", 
         validators=[
             FileRequired(), 
-            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')
+            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Používejte pouze JPG a PNG obrázky!'),
+            FileSize(max_size=5242880, message="Použitý obrázek je příliš velký pro zobrazení na webu. Maximální velikost je 5 MB.")
             ]
         )
     submit = SubmitField("Uložit")
@@ -84,7 +84,7 @@ class PersonaForm(FlaskForm):
     position_sk = StringField(
         "Název pozice (slovensky)", validators=[DataRequired()])
     phone = StringField("Tel. číslo", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
     area = SelectField(
         "Oblast působnosti", 
         choices=["centrala", "prodejny", "sklady"], 
@@ -98,7 +98,8 @@ class UploadPersonaImg(FlaskForm):
         "Fotografie", 
         validators=[
             FileRequired(), 
-            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Pouze JPG a PNG obrázky!')
+            FileAllowed(['jpg', 'png', 'JPG', 'PNG'], 'Používejte pouze JPG a PNG obrázky!'),
+            FileSize(max_size=5242880, message="Použitý obrázek je příliš velký pro zobrazení na webu. Maximální velikost je 5 MB.")
             ]
         )
     submit = SubmitField("Uložit")

@@ -70,7 +70,9 @@ def mainpage(context):
         db.session.commit()
         flash(locale["alerts"]["email_sent"][lang])
         return redirect(url_for('mainpage', context=context))
-    
+    if form.errors != {}:
+        for err_msg in form.errors.values():
+            flash(err_msg[0], category='danger')
     return render_template("mainpage.html", lang=lang, loc=locale, sections=sections, video=video, form=form, context=context)
 
 
@@ -78,6 +80,9 @@ def mainpage(context):
 
 @app.route('/admin', methods=["GET", "POST"])
 def login():
+    if current_user:
+        flash(f"Jste přihlášen(a) jako: {current_user.name}")
+        return redirect(url_for("index"))
     form = LoginForm()
     form_title = "Přihlášení"
     if form.validate_on_submit():
