@@ -78,9 +78,10 @@ section {
     width: 100%;
     opacity: 0;
     display: flex;
+    flex-direction: column;
     background-color: yellow;
     padding: 10px;
-    justify-content: center;
+    align-items: center;
     animation-name: hide-alert;
     animation-duration: 5s;
 }
@@ -542,6 +543,10 @@ iframe {
     grid-area: message;
 }
 
+#recaptcha {
+    grid-area: recaptcha;
+}
+
 #terms-block {
     grid-area: terms;
 }
@@ -550,6 +555,7 @@ iframe {
     grid-area: submit;
     display: flex;
     justify-content: flex-start;
+    z-index: 10;
 }
 
 #terms-block {
@@ -605,6 +611,7 @@ iframe {
         'email file'
         'message message'
         'terms terms'
+        'recaptcha recaptcha'
         'submit submit';
     grid-gap: 20px;
 }
@@ -895,6 +902,7 @@ footer {
             'file'
             'message'
             'terms'
+            'recaptcha'
             'submit';
     }
 
