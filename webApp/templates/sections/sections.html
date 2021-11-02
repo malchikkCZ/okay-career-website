@@ -1,4 +1,4 @@
-{% for section in sections %}
+{% for section in sections | sort(attribute='id') %}
 
 <div>
     {% if loop.index % 2 == 0 %}

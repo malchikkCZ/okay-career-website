@@ -1,6 +1,6 @@
 <section id="contacts">
 
-    {% for persona in persona_list %}
+    {% for persona in persona_list | sort(attribute='id') %}
         {% include "snippets/persona.html" %}
     {% endfor %}
 

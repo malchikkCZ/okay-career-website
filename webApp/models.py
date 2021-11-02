@@ -11,7 +11,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 
 from webApp import db, login_manager
-
+from webApp import SMTP_USER, SMTP_PASS
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -39,7 +39,7 @@ class User(UserMixin, db.Model):
         new_password = "".join(sample(chars, 8))
 
         msg = MIMEMultipart()
-        msg["From"] = os.environ.get("SMTP_USER")
+        msg["From"] = SMTP_USER
         msg["To"] = email
         msg["Subject"] = "Přihlašovací údaje pro OKAY Kariera"
         msg.attach(MIMEText(
@@ -47,13 +47,13 @@ class User(UserMixin, db.Model):
             f"Nové heslo do administrace: {new_password}\n\n" +
             f"Po přihlášení si jej prosím změňte.", "plain"))
         text_msg = msg.as_string()
-    
+
         with smtplib.SMTP("smtp.gmail.com") as mailserver:
             mailserver.starttls()
-            mailserver.login(user=os.environ.get("SMTP_USER"),
-                            password=os.environ.get("SMTP_PASS"))
+            mailserver.login(user=SMTP_USER,
+                            password=SMTP_PASS)
             mailserver.sendmail(
-                from_addr=os.environ.get("SMTP_USER"),
+                from_addr=SMTP_USER,
                 to_addrs=email,
                 msg=text_msg
             )
@@ -120,8 +120,8 @@ class Candidate(db.Model):
 
         with smtplib.SMTP("smtp.gmail.com") as mailserver:
             mailserver.starttls()
-            mailserver.login(user=os.environ.get("SMTP_USER"),
-                             password=os.environ.get("SMTP_PASS"))
+            mailserver.login(user=SMTP_USER,
+                             password=SMTP_PASS)
             mailserver.sendmail(
                 from_addr=self.email,
                 to_addrs=recipient,
