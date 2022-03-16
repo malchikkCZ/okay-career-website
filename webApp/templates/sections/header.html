@@ -19,21 +19,23 @@
 </nav>
 
 <script>
-    $('.respicon').on('tap mouseover click', () => {
-        if ($('.respmenu').css("display") == "block") {
-            $('.respmenu').css("display", "none");
-        } else {
-            $('.respmenu').css("display", "block");
+
+    $('.rightbarresp').on('click', () => {
+        $('.respmenu').toggle();
+    });
+
+    $('#dropdown-toggle').on('click', () => {
+        $('.desktop-dropdown').toggle();
+    });
+
+    $(document).on('click', (e) => {
+        if ($(e.target).closest('.rightbarresp').length === 0 && $(window).width() < 1280 ) {
+            $('.respmenu').hide();
+        }
+
+        if ($(e.target).closest('.rightbar').length === 0 && $(window).width() >= 1280 ) {
+            $('.desktop-dropdown').hide();
         }
     });
-    
-    $(document).on('tap click', (evt) => {
-        if (!$(evt.target).hasClass('respmenu')) {
-            $('.respmenu').css("display", "none");
-        }
-    });
-    
-    $('.respmenu').on('mouseout', () => {
-        $('.respmenu').css("display", "none");
-    });
+
 </script>

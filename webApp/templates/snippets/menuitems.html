@@ -2,9 +2,17 @@
     <li>
         <a href="{{ url_for('index', _anchor='main') }}">{{ loc.top_menu.about[lang] }}</a>
     </li>
-    <li>
-        <a href="https://www.jobs.cz/prace/?company%5B%5D=79138" target="_blank">{{ loc.top_menu.job_offer[lang] }}</a>
+    <li class="resp-hidden">
+        <a href="#" id="dropdown-toggle">{{ loc.top_menu.job_offer[lang] }}</a>
     </li>
+    <div class="desktop-dropdown">
+        <li>
+            <a href="https://okay.jobs.cz/">{{ loc.top_menu.job_offer[lang] }} ČR</a>
+        </li>
+        <li>
+            <a href="https://www.profesia.sk/praca/okay-slovakia/C26730">{{ loc.top_menu.job_offer[lang] }} SK</a>
+        </li>
+    </div>
     <li>
         <a href="{{ url_for('index', _anchor='contacts') }}">{{ loc.top_menu.contacts[lang] }}</a>
     </li>
