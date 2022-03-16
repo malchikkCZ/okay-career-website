@@ -669,6 +669,10 @@ textarea:focus {
     box-shadow: 0 0 10px #053742;
 }
 
+iframe[title="reCAPTCHA"] {
+    width: 100%;
+}
+
 
 /* Contacts */
 
