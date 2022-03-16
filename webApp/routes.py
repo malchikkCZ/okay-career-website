@@ -80,7 +80,7 @@ def mainpage(context):
 
 @app.route('/admin', methods=["GET", "POST"])
 def login():
-    if current_user:
+    if current_user.is_authenticated:
         flash(f"Jste přihlášen(a) jako: {current_user.name}")
         return redirect(url_for("index"))
     form = LoginForm()

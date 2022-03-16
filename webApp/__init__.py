@@ -14,8 +14,8 @@ Bootstrap(app)
 
 # Configure recaptcha
 app.config['RECAPTCHA_USE_SSL'] = False
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6LdEcwYdAAAAAJ7PsG4W16LCo0VoU5WzVhFfzNdq'
-app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LdWtgwdAAAAAHTJUO2uRAT3vXzibvojmT--lgwz'
+app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get("RECAPTCHA_PRIVATE_KEY")
 
 # Initialize database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///career.db'
@@ -25,5 +25,8 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+SMTP_USER = os.environ.get("SMTP_USER")
+SMTP_PASS = os.environ.get("SMTP_PASS")
 
 from webApp import routes
