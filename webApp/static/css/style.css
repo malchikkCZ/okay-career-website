@@ -155,8 +155,12 @@ nav {
     text-decoration: none;
 }
 
-.respmenu li {
+.respmenu ul {
     background-color: #124d96;
+    padding-left: 0;
+}
+
+.respmenu li {
     font-size: 1.5rem;
     font-weight: bold;
     height: 60px;
@@ -665,6 +669,10 @@ textarea:focus {
     box-shadow: 0 0 10px #053742;
 }
 
+iframe[title="reCAPTCHA"] {
+    width: 100%;
+}
+
 
 /* Contacts */
 
@@ -1039,5 +1047,36 @@ footer {
 
     #admin-container {
         display: none;
+    }
+}
+
+
+/* vaccancies top bar dropdown menu */
+
+@media (min-width: 1280px) {
+    .desktop-dropdown {
+        display: none;
+        position: absolute;
+        top: 80px;
+        background-color: #124d96;
+    }
+
+    .desktop-dropdown li {
+        display: flex;
+        height: 60px;
+        width: 200px;
+        padding-right: 20px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 1279px) {
+    .desktop-dropdown {
+        display: block !important;
+    }
+
+    .resp-hidden {
+        display: none !important;
     }
 }
